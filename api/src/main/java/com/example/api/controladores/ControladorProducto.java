@@ -8,7 +8,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
-//import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.postgresql.util.PSQLException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "ControladorProducto", value = "/ControladorProducto")
+@WebServlet(name = "ControladorProducto", value = {"/ControladorProducto", "/api/productos"})
 public class ControladorProducto extends HttpServlet {
     private static DBConfig conexion = new DBConfig();
     private static Connection pool;
@@ -30,25 +31,41 @@ public class ControladorProducto extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
+        response.addHeader("Access-Control-Allow-Origin", "*");
 
-//        String nombre = request.getParameter("nombre");
-//        String descripcion = request.getParameter("descripcion");
-//        String precio = request.getParameter("precio");
-//        String categoria = request.getParameter("categoria");
 
+        String nombre = request.getParameter("nombre");
+        String buscaTodos = request.getParameter("buscaTodos");
         PrintWriter print = response.getWriter();
 
-        try{
+        try {
             String consulta = "SELECT * FROM productos ORDER BY id";
-            Statement query = pool.createStatement();
-            ResultSet resultado = query.executeQuery(consulta);
+            PreparedStatement query = pool.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS);
+
+            boolean condicion = true;
+            while (condicion) {
+                if (nombre != null && !nombre.isEmpty() && !nombre.isBlank()) {
+                    consulta = "SELECT * FROM productos WHERE lower(nombre) = (?) ORDER BY id";
+
+                    query = pool.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS);
+                    query.setString(1, nombre.toLowerCase());
+
+                    condicion = false;
+                } else if (Boolean.parseBoolean(buscaTodos)) {
+                    condicion = false;
+                } else {
+                    throw new Exception("no params");
+                }
+            }
+
+            ResultSet resultado = query.executeQuery();
 
             ArrayList<Producto> resultObjArr = variosProductos(resultado);
 
             response.setStatus(200);
             print.print(gson.toJson(resultObjArr));
         } catch (Exception e) {
-//                e.printStackTrace();
+            e.printStackTrace();
             Map<String, String> errorObj = new HashMap<>();
             errorObj.put("error", e.getMessage());
 
@@ -211,14 +228,15 @@ public class ControladorProducto extends HttpServlet {
                 resultObj.setDescripcion(resultado.getString("descripcion"));
                 resultObj.setPrecio(resultado.getDouble("precio"));
                 resultObj.setCategoria_id(resultado.getInt("categoria_id"));
+                resultObj.setDisponible(resultado.getBoolean("disponible"));
 
                 String insertaQ = "SELECT nombre FROM public.categorias WHERE id = (?)";
                 PreparedStatement query = pool.prepareStatement(insertaQ, Statement.RETURN_GENERATED_KEYS);
                 query.setInt(1, resultado.getInt("categoria_id"));
                 ResultSet categoria = query.executeQuery();
                 categoria.next();
-
                 resultObj.setCategoria_string(categoria.getString("nombre"));
+
                 resultObjArr.add(resultObj);
             }while(resultado.next());
         }

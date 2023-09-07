@@ -3,6 +3,7 @@ package com.example.api.controladores;
 import com.example.api.DB.DBConfig;
 import com.example.api.modelos.DetallePedido;
 import com.example.api.modelos.Pedido;
+import com.example.api.modelos.Producto;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -82,8 +83,7 @@ public class ControladorPedido extends HttpServlet {
 
         java.util.Date date = new java.util.Date();
         java.sql.Date fecha_pedido = new java.sql.Date(date.getTime());
-        String estado_pedido = "en proceso";
-        
+
         String productos_compradosParam = request.getParameter("productos_comprados");
 
 
@@ -106,13 +106,12 @@ public class ControladorPedido extends HttpServlet {
 
 
             //crea un nuevo Pedido con los parametros verificados
-            Pedido pedido = new Pedido(Integer.parseInt(usuario_id), fecha_pedido, estado_pedido, detallesArr);
-            String query_pedidos_string = "INSERT INTO public.pedidos(usuario_id, fecha_pedido, estado_pedido) VALUES (?, ?, ?) RETURNING id_pedido;";
+            Pedido pedido = new Pedido(Integer.parseInt(usuario_id), fecha_pedido, detallesArr);
+            String query_pedidos_string = "INSERT INTO public.pedidos(usuario_id, fecha_pedido) VALUES (?, ?) RETURNING id_pedido;";
 
             PreparedStatement query_pedidos = pool.prepareStatement(query_pedidos_string, Statement.RETURN_GENERATED_KEYS);
             query_pedidos.setInt(1, pedido.getUsuario_id());
             query_pedidos.setDate(2, pedido.getFecha_pedido());
-            query_pedidos.setString(3, pedido.getEstado_pedido());
             query_pedidos.execute();
             ResultSet resultado = query_pedidos.getGeneratedKeys();
 
@@ -189,8 +188,46 @@ public class ControladorPedido extends HttpServlet {
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        pool = conexion.connect();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+
+        PrintWriter print = response.getWriter();
+
+        try {
+            String pedido_id = request.getParameter("pedido_id");
+            String pedido_pagado = request.getParameter("pedido_pagado");
+            if (pedido_id == null || pedido_id.isEmpty() || pedido_id.isBlank()) throw new Exception("no pedido_id");
+            if (pedido_pagado == null || pedido_pagado.isEmpty() || pedido_pagado.isBlank() || !Boolean.parseBoolean(pedido_pagado)) throw new Exception("no se pudo realizar el pago");
+
+            String orden = "UPDATE public.pedidos SET pedido_pagado=COALESCE((?), pedido_pagado) WHERE id_pedido = (?) RETURNING id_pedido;";
+            PreparedStatement query = pool.prepareStatement(orden, Statement.RETURN_GENERATED_KEYS);
+            query.setBoolean(1, Boolean.parseBoolean(pedido_pagado));
+            query.setInt(2, Integer.parseInt(pedido_id));
+
+            query.execute();
+            ResultSet resultado = query.getGeneratedKeys();
+
+            if (resultado.next()) {
+                HashMap<String, String> mensaje = new HashMap<>();
+                mensaje.put("mensaje", "pedido " + String.valueOf(resultado.getInt("id_pedido")) + " pagado correctamente");
+
+                response.setStatus(200);
+                print.print(gson.toJson(mensaje));
+            }else{
+                throw new Exception("no results");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, String> errorObj = new HashMap<>();
+            errorObj.put("error", e.getMessage());
+
+            print.print(gson.toJson(errorObj));
+        }finally {
+            print.flush();
+            conexion.closeConnection();
+        }
     }
 
     @Override
@@ -239,6 +276,7 @@ public class ControladorPedido extends HttpServlet {
                 resultObj.setId_pedido(Integer.parseInt(resultado.getString("id_pedido")));
                 resultObj.setUsuario_id(resultado.getInt("usuario_id"));
                 resultObj.setFecha_pedido(resultado.getDate("fecha_pedido"));
+                resultObj.setPagado(resultado.getBoolean("pedido_pagado"));
 
                 ArrayList detallesArr = new ArrayList<DetallePedido>();
                 String queryDetalles = "SELECT producto_id, cantidad_producto, precio_detalle FROM public.detalles_pedido WHERE pedido_id=(?);";
@@ -267,7 +305,6 @@ public class ControladorPedido extends HttpServlet {
                 }
 
                 resultObj.setProductos_comprados(detallesArr);
-                resultObj.setEstado_pedido(resultado.getString("estado_pedido"));
                 resultObj.getPrecio_total_pedido();
 
                 resultObjArr.add(resultObj);

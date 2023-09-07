@@ -18,7 +18,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "ControladorCategoria", value = "/ControladorCategoria")
+@WebServlet(name = "ControladorCategoria", value = {"/ControladorCategoria"})
 public class ControladorCategoria extends HttpServlet {
     private static DBConfig conexion = new DBConfig();
     private static Connection pool;
