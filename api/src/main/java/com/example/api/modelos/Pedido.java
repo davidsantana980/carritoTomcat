@@ -7,9 +7,18 @@ public class Pedido {
     private int id_pedido;
     private int usuario_id;
     private Date fecha_pedido;
-    private String estado_pedido;
     private ArrayList<DetallePedido> productos_comprados;
     private Double precio_total_pedido = null;
+
+    private boolean pagado;
+
+    public boolean isPagado() {
+        return pagado;
+    }
+
+    public void setPagado(boolean pagado) {
+        this.pagado = pagado;
+    }
 
     public Double getPrecio_total_pedido() {
         if(precio_total_pedido == null && !(productos_comprados.isEmpty())) {
@@ -27,17 +36,15 @@ public class Pedido {
     }
     public Pedido() {
     }
-    public Pedido(int id_pedido, int usuario_id, Date fecha_pedido, String estado_pedido, ArrayList<DetallePedido> productos_comprados) {
+    public Pedido(int id_pedido, int usuario_id, Date fecha_pedido, ArrayList<DetallePedido> productos_comprados) {
         this.id_pedido = id_pedido;
         this.usuario_id = usuario_id;
         this.fecha_pedido = fecha_pedido;
-        this.estado_pedido = estado_pedido;
         this.productos_comprados = productos_comprados;
     }
-    public Pedido(int usuario_id, Date fecha_pedido, String estado_pedido, ArrayList<DetallePedido> productos_comprados) {
+    public Pedido(int usuario_id, Date fecha_pedido, ArrayList<DetallePedido> productos_comprados) {
         this.usuario_id = usuario_id;
         this.fecha_pedido = fecha_pedido;
-        this.estado_pedido = estado_pedido;
         this.productos_comprados = productos_comprados;
     }
 
@@ -63,14 +70,6 @@ public class Pedido {
 
     public void setFecha_pedido(Date fecha_pedido) {
         this.fecha_pedido = fecha_pedido;
-    }
-
-    public String getEstado_pedido() {
-        return estado_pedido;
-    }
-
-    public void setEstado_pedido(String estado_pedido) {
-        this.estado_pedido = estado_pedido;
     }
 
     public ArrayList<DetallePedido> getProductos_comprados() {

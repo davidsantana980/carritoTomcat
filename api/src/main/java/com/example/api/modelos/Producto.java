@@ -6,6 +6,17 @@ public class Producto implements Serializable {
     private int id;
     private String nombre;
     private String descripcion;
+
+    private boolean disponible;
+
+    public boolean isDisponible() {
+        return disponible;
+    }
+
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
+    }
+
     private double precio;
     private int categoria_id;
     private String categoria_string;
