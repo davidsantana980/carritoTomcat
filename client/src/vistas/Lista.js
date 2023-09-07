@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback, useMemo } from "react"
 import { Badge, Button, ButtonGroup, Card, CardGroup, Col, Container, Row } from "react-bootstrap"
 import { LinkContainer } from "react-router-bootstrap"
 import { useLocation, useNavigate } from "react-router-dom"
+import Producto from "./ProductoModal";
 
-export default function Lista(){
+export default function ListaProductos(){
     //get query params from location reference
     let nav = useNavigate();
     let {state : params} = useLocation();
@@ -26,8 +27,9 @@ export default function Lista(){
     })
     
     let loadItems = useCallback(() => {
-        let url = `http://localhost:8080/?${new URLSearchParams(queryParams).toString()}` 
+        let url = `http://localhost:8080/api/productos?${new URLSearchParams(queryParams).toString()}` 
 
+        console.log(url)
         fetch(url)
         .then((res) => res.json()) //take the response string and turn it into a json array
         .then((json) => { //take the json array from the previous step...
@@ -45,10 +47,10 @@ export default function Lista(){
         })  
     }, [queryParams])
 
-    // useEffect(() => {
-    //     if(!params) return nav("/", {replace : true});
-    //     return loadItems
-    // }, [state.dataIsLoaded, loadItems, nav, params])
+    useEffect(() => {
+        if(!params) return nav("/", {replace : true});
+        return loadItems
+    }, [state.dataIsLoaded, loadItems, nav, params])
 
     function ReturnButton  (props) {
         return (
@@ -71,9 +73,11 @@ export default function Lista(){
                                 <Row className="mb-3">
                                     <Col>
                                         <Container fluid>
-                                            <Card.Title><b>{producto.nombre}</b></Card.Title>
+                                            <Card.Title as={Button} className="btn-light">
+                                                <Producto props={producto}/>
+                                            </Card.Title>
                                             <Card.Text>
-                                                {producto.issue_text ? (
+                                                {producto.descripcion ? (
                                                     <span><b>{producto.descripcion}</b></span>
                                                 ) : (
                                                     "Mira mas detalles"
@@ -105,9 +109,9 @@ export default function Lista(){
 
         return (
             <>
-                {/* <Container fluid className="mt-2 p-3  col-lg-8 border bg-light">
-                    <h3>Search results:</h3>
-                </Container> */}
+                <Container fluid className="mt-1 p-3  col-lg-8 border bg-light">
+                    <text className="display-6">Resultados:</text>
+                </Container>
                 <Container className="border col-md-12 col-lg-8 mb-5" >
                     <CardGroup className="mt-3">
                         {productoCards}

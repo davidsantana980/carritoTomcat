@@ -11,20 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="60105e22-55da-4b21-afa8-2a08f1d36456" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorCategoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorCategoria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorPedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorPedido.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Pedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Pedido.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Producto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Producto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/App.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/App.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/App.test.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/reportWebVitals.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/setupTests.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,7 +205,8 @@
       <workItem from="1693863486790" duration="2703000" />
       <workItem from="1693919463473" duration="4526000" />
       <workItem from="1693940905098" duration="3158000" />
-      <workItem from="1694040377132" duration="9183000" />
+      <workItem from="1694040377132" duration="9766000" />
+      <workItem from="1694091073970" duration="3553000" />
     </task>
     <servers />
   </component>
@@ -235,7 +223,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java</url>
-          <line>72</line>
+          <line>80</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
