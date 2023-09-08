@@ -11,7 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="60105e22-55da-4b21-afa8-2a08f1d36456" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorCategoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorCategoria.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +21,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Servlet" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -206,7 +206,8 @@
       <workItem from="1693919463473" duration="4526000" />
       <workItem from="1693940905098" duration="3158000" />
       <workItem from="1694040377132" duration="9766000" />
-      <workItem from="1694091073970" duration="3553000" />
+      <workItem from="1694091073970" duration="3867000" />
+      <workItem from="1694107116153" duration="3736000" />
     </task>
     <servers />
   </component>
@@ -225,6 +226,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java</url>
           <line>80</line>
           <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java</url>
+          <line>29</line>
+          <option name="timeStamp" value="15" />
         </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.lang.IllegalArgumentException" package="java.lang" />

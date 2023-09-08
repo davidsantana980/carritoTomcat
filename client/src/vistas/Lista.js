@@ -30,6 +30,7 @@ export default function ListaProductos(){
         let url = `http://localhost:8080/api/productos?${new URLSearchParams(queryParams).toString()}` 
 
         console.log(url)
+        
         fetch(url)
         .then((res) => res.json()) //take the response string and turn it into a json array
         .then((json) => { //take the json array from the previous step...

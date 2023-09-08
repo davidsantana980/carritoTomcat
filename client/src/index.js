@@ -25,9 +25,9 @@ function CustomNavbar() {
               >
                 <BuscarProducto/>
               </NavDropdown>
-            {/* <LinkContainer to="/busca">
-              <Nav.Link>Buscar producto</Nav.Link>
-            </LinkContainer> */}
+            <LinkContainer to="/agrega-producto">
+              <Nav.Link>Agregar producto</Nav.Link>
+            </LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Container>
