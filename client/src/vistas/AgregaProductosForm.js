@@ -1,4 +1,4 @@
-import { Form, Button, Container, Row } from "react-bootstrap";
+import { Form, Button, Container, Row, Badge } from "react-bootstrap";
 import {useEffect, useState} from "react";
 import { LinkContainer } from "react-router-bootstrap";
 
@@ -44,7 +44,7 @@ let CategoriasDropdown = () => {
 }
 
 export default function AgregaProductosForm() {
-    const [projectObj, setProject] = useState({
+    const [productoObj, setProject] = useState({
       nombre: "",
       descripcion: "",
       precio: "",
@@ -56,7 +56,7 @@ export default function AgregaProductosForm() {
       const inputValue = event.target.value;
   
       setProject({
-        ...projectObj,
+        ...productoObj,
         [inputName]: inputValue
       });
     }
@@ -64,35 +64,30 @@ export default function AgregaProductosForm() {
     const [validated, setValidated] = useState(false);
 
     const handleSubmit =  (event) => {
+        setValidated(false);
         event.preventDefault();
   
         const form = event.currentTarget;
   
-        if (form.checkValidity() === false || !projectObj.categoria) {
+        if (form.checkValidity() === false || !productoObj.categoria) {
           event.preventDefault();
           event.stopPropagation();
           return
         }
         
         setValidated(true)
-
-        console.log(projectObj)
-
         
-        // fetch(process.env.REACT_APP_API_LINK, {
-        //   method: "POST", // or 'PUT'
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify(state),
-        // })
-        // .then((res) => res.json())
-        // .then(result => {
-        //   return nav("/see-issues", {replace : true, state: {project : state.issue_project}})
-        // })
-        // .catch(error => {
-        //   console.log(error)
-        // })
+        fetch("http://localhost:8080" + "/api/productos", {
+          method: "POST",
+          body: new URLSearchParams(productoObj),
+        })
+        .then((res) => res.json())
+        .then(result => {
+          return;
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
 
   
@@ -105,22 +100,23 @@ export default function AgregaProductosForm() {
                 </p>
                 </Form.Label>
                 <Container className="mb-2">
-                <Form.Control value={projectObj.nombre} onChange={handleChange} type="text" placeholder="Nombre" name='nombre' required />
-                <Form.Control value={projectObj.descripcion} onChange={handleChange} as="textarea" name="descripcion" placeholder="Descripción" required/>
-                <Form.Control  step="0.01" type="number" value={projectObj.precio} onChange={handleChange} name="precio" placeholder="Precio" required/>
+                    <Form.Control value={productoObj.nombre} onChange={handleChange} type="text" placeholder="Nombre" name='nombre' required />
+                    <Form.Control value={productoObj.descripcion} onChange={handleChange} as="textarea" name="descripcion" placeholder="Descripción" required/>
+                    <Form.Control onKeyDown={(evt) => ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()} step="0.1" type="number" value={productoObj.precio} onChange={handleChange} name="precio" placeholder="Precio" required/>
 
 
-                <Form.Select value={projectObj.categoria} onChange={handleChange} name="categoria" required>
-                    <option value="">Categoría</option>
-                    <CategoriasDropdown/>
-                </Form.Select>
-                <Container fluid className="d-grid mt-1">
-                    {/* <LinkContainer to="/see-issues" state={projectObj}>   */}
-                    <Button variant="primary" onClick={handleSubmit} className="mt-2" type="submit">Search</Button>
-                    {/* </LinkContainer> */}
-                </Container> 
+                    <Form.Select value={productoObj.categoria} onChange={handleChange} name="categoria" required>
+                        <option value="">Categoría</option>
+                        <CategoriasDropdown/>
+                    </Form.Select>
+                    <Container fluid className="d-grid mt-1">
+                        {/* <LinkContainer to="/see-issues" state={projectObj}>   */}
+                        <Button variant="primary" onClick={handleSubmit} className="mt-2" type="submit">Search</Button>
+                        {/* </LinkContainer> */}
+                    </Container> 
                 </Container>
             </Form>
+            <p className="display-3 text-center"><Badge bg="success">{validated ? `Producto agregado!` : ""}</Badge></p>
         </Container>
     );
 }

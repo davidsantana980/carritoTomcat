@@ -43,7 +43,7 @@ export default function ListaProductos(){
 
             return changeState({
                 dataIsLoaded : false,
-                message : "Oops! Not found"
+                message : "Ups! No hay resultados"
             })
         })  
     }, [queryParams])
@@ -124,7 +124,7 @@ export default function ListaProductos(){
 
     }
 
-    let message = "Please wait..."
+    let message = "Espere..."
 
     if(state.message){
         message = state.message

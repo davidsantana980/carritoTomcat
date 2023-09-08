@@ -48,7 +48,7 @@ export default function Producto (props) {
     if(!info){
         return (
             <Container>
-                <h1>Unexpected error, issue not found</h1>
+                <h1>Error inesperado, no se consiguió el producto</h1>
             </Container>
         )
     }

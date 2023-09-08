@@ -33,7 +33,6 @@ public class ControladorProducto extends HttpServlet {
         response.setCharacterEncoding("utf-8");
         response.addHeader("Access-Control-Allow-Origin", "*");
 
-
         String nombre = request.getParameter("nombre");
         String categoria_id = request.getParameter("categoria_id");
         String buscaTodos = request.getParameter("buscaTodos");
@@ -89,6 +88,8 @@ public class ControladorProducto extends HttpServlet {
             pool = conexion.connect();
             response.setContentType("application/json");
             response.setCharacterEncoding("utf-8");
+            response.addHeader("Access-Control-Allow-Origin", "*");
+
 
             PrintWriter print = response.getWriter();
 
@@ -101,13 +102,13 @@ public class ControladorProducto extends HttpServlet {
             try {
                 String[] props = {nombre,descripcion, precio, categoria};
                 for (String prop : props) {
-                    if(prop == null || prop.isBlank() || prop.isEmpty()) throw new Exception("no parameter " + prop);
+                    if(prop == null || prop.isBlank() || prop.isEmpty()) throw new Exception("parametro faltante");
                 }
 
                 Producto prod = new Producto(nombre, descripcion, precio, categoria);
                 String orden = "INSERT INTO public.productos(\n" +
                         "\tnombre, descripcion, precio, categoria_id)\n" +
-                        "\tVALUES (?, ?, ?, ?) RETURNING id, nombre, descripcion, precio, categoria_id;";
+                        "\tVALUES (?, ?, ?, ?) RETURNING id, nombre, descripcion, precio, categoria_id, disponible;";
 
                 PreparedStatement query = pool.prepareStatement(orden, Statement.RETURN_GENERATED_KEYS);
                 query.setString(1, prod.getNombre());

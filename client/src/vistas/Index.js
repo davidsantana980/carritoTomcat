@@ -132,7 +132,7 @@ class Index extends Component {
         if(!this.state.dataIsLoaded){
             return (
                 <Container fluid className="mt-2 p-4  col-lg-8 border bg-light">
-                    <h1>Please wait...</h1>
+                    <h1>Espere...</h1>
                 </Container>
             )
         } 
