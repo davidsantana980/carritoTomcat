@@ -1,8 +1,8 @@
 package com.example.api.controladores;
 
 import com.example.api.DB.DBConfig;
+import com.example.api.modelos.Categoria;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,10 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,18 +26,18 @@ public class ControladorCategoria extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         pool = conexion.connect();
         PrintWriter print = response.getWriter();
-        String id = request.getParameter("id");
+        response.addHeader("Access-Control-Allow-Origin", "*");
+
+//        String id = request.getParameter("id");
 
         try {
-            String insertaQ = "SELECT nombre FROM public.categorias WHERE id = (?)";
+            String insertaQ = "SELECT * FROM public.categorias"; // WHERE id = (?)";
             PreparedStatement query = pool.prepareStatement(insertaQ, Statement.RETURN_GENERATED_KEYS);
-            query.setInt(1, Integer.parseInt(id));
+//            query.setInt(1, Integer.parseInt(id));
             ResultSet categoria = query.executeQuery();
-            categoria.next();
+//            categoria.next();
 
-
-            Map<String, String> resp = new HashMap<String, String>();
-            resp.put("categoria", categoria.getString("nombre"));
+            ArrayList<Categoria> resp = variasCategorias(categoria);
 
             print.print(gson.toJson(resp));
         } catch (Exception e) {
@@ -58,4 +56,20 @@ public class ControladorCategoria extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
+
+    private static ArrayList<Categoria> variasCategorias(ResultSet resultado) throws SQLException {
+        ArrayList<Categoria> resultObjArr = new ArrayList<>();
+        if(resultado.next()) {
+            do {
+                Categoria resultObj = new Categoria();
+                resultObj.setId(Integer.parseInt(resultado.getString("id")));
+                resultObj.setNombre(resultado.getString("nombre"));
+
+                resultObjArr.add(resultObj);
+            }while(resultado.next());
+        }
+
+        return resultObjArr;
+    }
+
 }

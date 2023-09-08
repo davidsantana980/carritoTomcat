@@ -4,9 +4,10 @@ import './index.css';
 // import reportWebVitals from './reportWebVitals';
 
 import { BrowserRouter } from 'react-router-dom';
-import { Container,  Nav, Navbar } from "react-bootstrap";
+import { Container,  Nav, NavDropdown, Navbar } from "react-bootstrap";
 import {LinkContainer} from "react-router-bootstrap"
 import Rutas from './Rutas';
+import BuscarProducto from './vistas/BuscarProducto';
 
 function CustomNavbar() {
   return (
@@ -18,8 +19,14 @@ function CustomNavbar() {
         <Navbar.Toggle aria-controls='basic-navbar-nav'/>
         <Navbar.Collapse id= "basic-navbar-nav">
           <Nav>
-            <LinkContainer to="/busca">
-              <Nav.Link>Buscar producto</Nav.Link>
+            <NavDropdown
+                title="Buscar producto"
+                menuVariant="dark"
+              >
+                <BuscarProducto/>
+              </NavDropdown>
+            <LinkContainer to="/agrega-producto">
+              <Nav.Link>Agregar producto</Nav.Link>
             </LinkContainer>
           </Nav>
         </Navbar.Collapse>

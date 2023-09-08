@@ -1,7 +1,8 @@
 import { Component, useState } from "react";
 import { Container, Card, CardGroup, Button, Row, Col, Badge, ButtonGroup, Modal, CardImg } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import Lista from "./Lista";
+import ListaProductos from "./Lista";
+import Producto from "./ProductoModal";
 // require('dotenv').config();
 
 
@@ -36,23 +37,27 @@ class Index extends Component {
         }
     }
 
-    uniqueProjectsByProp(prop){
-        let uniqueByPropArray = [...new Set(this.state.allProductos.map(obj => obj[prop]))];
+    categoriasUnicas(){
+        let categoriasArr = [...new Set(this.state.allProductos.map(obj => obj["categoria_string"]))];
+        let idsArr =  [...new Set(this.state.allProductos.map(obj => obj["categoria_id"]))];
+
         let searchResults = [];
 
         const singleResult = {
             name: "",
-            totalCount: 0
+            id: 0
         };          
 
-        for(let propName of uniqueByPropArray){
-            let nameAndCounts = Object.create(singleResult, {
-                name: {value : propName},
-                //if the searched prop is a producto or assignment list of issues, the count will be 1) the "open" amount of issues and 2) the total amount of issues for said prop. 
-                totalCount: {value :  this.state.allProductos.filter(issue => issue[prop] === propName).length },
-            });
+        for(let categoria of categoriasArr){
+            let nameAndId;
+            for(let id of idsArr){
+                nameAndId = Object.create(singleResult, {
+                    name: {value : categoria},
+                    id: {value :  id},
+                });
 
-            searchResults.push(nameAndCounts);
+            }
+            searchResults.push(nameAndId);
         }
 
         return searchResults;
@@ -61,19 +66,19 @@ class Index extends Component {
     render() {
 
         let CategoriaCards = () => {
-            let parCategoriaCantidad = this.uniqueProjectsByProp("categoria_string");
+            let parCategoriaCantidad = this.categoriasUnicas("categoria_string");
 
-            return parCategoriaCantidad.map((producto, index) => {
+            return parCategoriaCantidad.map((categoria, index) => {
                 return(
                     <>  
                         <Row >
                             <Col md="12" className="mt-2">
-                                <Container key={producto.name}>
+                                <Container key={categoria.name}>
                                     <Card key={index}>
                                         <Card.Body>
-                                            <Card.Title>{producto.name}</Card.Title>
+                                            <Card.Title>{categoria.name}</Card.Title>
                                             <ButtonGroup>
-                                                <LinkContainer to={`/ver-productos`} state={{producto : producto.name}}>
+                                                <LinkContainer to={`/resultados`} replace state={{categoria_id : categoria.id}}>
                                                     <Card.Link><Button>Miralos</Button></Card.Link>
                                                 </LinkContainer>
                                             </ButtonGroup>
@@ -93,14 +98,24 @@ class Index extends Component {
                 return (
                     <Col lg="3" md="6" sm="6"> 
                         <Card className="w-100 my-2 shadow-2-strong">
-                            <CardImg src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/3.webp" style={{"aspect-ratio": "1 / 1"}}/>                   
-                            <Card.Body className="d-flex flex-column">
-                                <Card.Title><h5>{producto.nombre}</h5></Card.Title>
-                                <Card.Text>{`${producto.precio}$`}</Card.Text>
-                                <Card.Footer className="d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                                    <Button href="" className="shadow-0 me-1">Añade al carrito</Button>
-                                </Card.Footer>
-                            </Card.Body>
+                            <Container as={"div"} className="text-center" style={{"transform": "rotate(0)"}}>
+                                <CardImg src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/3.webp" style={{"aspectRatio": "1 / 1"}}/>                   
+                                <Card.Body className="d-flex flex-column">
+                                    <Card.Title>
+                                        <Producto props={producto}/>  
+                                    </Card.Title>
+                                    <Card.Text className="text-center">
+                                        Precio: {`${producto.precio}$`}
+                                    </Card.Text>
+                                </Card.Body>
+                            </Container>
+                            <Card.Footer as="div" className="d-grid gap-2">
+                                    <Button>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-cart" viewBox="0 0 16 16">
+                                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                        </svg>
+                                    </Button>
+                            </Card.Footer>
                         </Card>
                     </Col>
                 )
@@ -142,14 +157,16 @@ class Index extends Component {
                     <Row>
                         <Col lg={8}>
                             <Container>
-                                <text className="display-5">Nuestros productos</text> 
+                                <hr className="d-lg-none"/>
+                                <p className="display-5">Nuestros productos</p> 
                                 <hr/>
                             </Container>
                             <ProductoCards/>
                         </Col>
                         <Col lg={4} className="mt-1">
                             <Container>
-                                <text className="display-6">Categorias</text> 
+                                <hr className="d-lg-none"/>
+                                <p className="display-6">Categorias</p> 
                                 <hr/>
                             </Container>
                             <CategoriaCards/>

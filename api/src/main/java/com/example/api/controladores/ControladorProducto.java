@@ -35,6 +35,7 @@ public class ControladorProducto extends HttpServlet {
 
 
         String nombre = request.getParameter("nombre");
+        String categoria_id = request.getParameter("categoria_id");
         String buscaTodos = request.getParameter("buscaTodos");
         PrintWriter print = response.getWriter();
 
@@ -51,7 +52,14 @@ public class ControladorProducto extends HttpServlet {
                     query.setString(1, nombre.toLowerCase());
 
                     condicion = false;
-                } else if (Boolean.parseBoolean(buscaTodos)) {
+                } else if (categoria_id != null && !categoria_id.isEmpty() && !categoria_id.isBlank()) {
+                    consulta = "SELECT * FROM productos WHERE categoria_id = (?) ORDER BY id";
+
+                    query = pool.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS);
+                    query.setInt(1, Integer.parseInt(categoria_id));
+
+                    condicion = false;
+                }else if (Boolean.parseBoolean(buscaTodos)) {
                     condicion = false;
                 } else {
                     throw new Exception("no params");
