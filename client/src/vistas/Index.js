@@ -3,6 +3,7 @@ import { Container, Card, CardGroup, Button, Row, Col, Badge, ButtonGroup, Modal
 import { LinkContainer } from "react-router-bootstrap";
 import ListaProductos from "./Lista";
 import Producto from "./ProductoModal";
+// import Cookies from "js-cookie";
 // require('dotenv').config();
 
 
@@ -65,6 +66,7 @@ class Index extends Component {
 
     render() {
 
+        // console.log(Cookies.get("cacheDatos"))
         let CategoriaCards = () => {
             let parCategoriaCantidad = this.categoriasUnicas("categoria_string");
 
@@ -95,11 +97,12 @@ class Index extends Component {
 
         let ProductoCards = () => {
             let ProductosAr = this.state.allProductos.map((producto, index) => {
+                // index === 0 && console.log(producto.direccion_imagen)
                 return (
                     <Col lg="3" md="6" sm="6"> 
                         <Card className="w-100 my-2 shadow-2-strong">
                             <Container as={"div"} className="text-center" style={{"transform": "rotate(0)"}}>
-                                <CardImg src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/3.webp" style={{"aspectRatio": "1 / 1"}}/>                   
+                                <CardImg src={producto.direccion_imagen} style={{"aspectRatio": "1 / 1"}}/>                   
                                 <Card.Body className="d-flex flex-column">
                                     <Card.Title>
                                         <Producto props={producto}/>  

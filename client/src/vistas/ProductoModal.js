@@ -1,11 +1,35 @@
 import { useState } from "react";
-import { Button, ButtonGroup, Card, Col, Container, ListGroup, Modal} from "react-bootstrap";
+import { Button, ButtonGroup, Card, Col, Container, ListGroup, Modal, Row} from "react-bootstrap";
 import CardHeader from "react-bootstrap/esm/CardHeader";
 import { LinkContainer } from "react-router-bootstrap";
+import { useNavigate } from "react-router-dom";
+// import Cookies from 'js-cookie';
 
 let DetallesProducto = (props) => {
     let info = {...props.props}
-   
+    let nav = useNavigate();
+
+    let handleCompra = (event) => {
+        event.preventDefault();
+
+        // const form = event.currentTarget;
+
+        // if (form.checkValidity() === false) {
+        //     event.preventDefault();
+        //     event.stopPropagation();
+        //     return
+        // }
+      
+        // setValidated(true)
+
+        let datosCompra = {
+            cantidad_producto : 1,
+            producto : info
+        }
+
+        return nav("/compra-producto", {replace : true, state: datosCompra})
+    } 
+
     return (
         <Modal
           {...props}
@@ -17,7 +41,18 @@ let DetallesProducto = (props) => {
                 <Container >
                     <Card>
                         <Card.Body>
-                            <Card.Title className="mb-3">{info.nombre}</Card.Title>
+                            <Card.Title className="mb-3">
+                                <Row>
+                                    <Col lg="10">
+                                        {info.nombre}
+                                    </Col>
+                                    <Col lg="2">
+                                        <Button onClick={handleCompra}>
+                                            Comprar
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Card.Title>
                             <hr/>
                             <Card.Subtitle className="mb-3 text-muted mt-2">
                                 <Card.Text as="div">

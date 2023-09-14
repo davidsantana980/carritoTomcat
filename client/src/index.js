@@ -39,6 +39,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
+      <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+      </head>
       <CustomNavbar />
       <Rutas />
       <footer id="footer" className="fixed-bottom mt-3 py-2 bg-dark text-white-50">

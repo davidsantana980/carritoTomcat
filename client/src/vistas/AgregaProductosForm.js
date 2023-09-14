@@ -90,6 +90,7 @@ export default function AgregaProductosForm() {
         })
     }
 
+    // console.log(JSON.parse(window.localStorage.getItem("x")))
   
     return (
         <Container className="mt-2">
