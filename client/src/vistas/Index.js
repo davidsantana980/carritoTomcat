@@ -1,13 +1,14 @@
-import { Component, useState } from "react";
-import { Container, Card, CardGroup, Button, Row, Col, Badge, ButtonGroup, Modal, CardImg } from "react-bootstrap";
+import { Component } from "react";
+import { Container, Card, Button, Row, Col, ButtonGroup, CardImg } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import ListaProductos from "./Lista";
+// import ListaProductos from "./Lista";
 import Producto from "./ProductoModal";
+import { useNavigate } from "react-router-dom";
 // import Cookies from "js-cookie";
 // require('dotenv').config();
 
 
-class Index extends Component {
+class IndexClass extends Component {
     
     constructor(props) {
         super(props);
@@ -64,6 +65,19 @@ class Index extends Component {
         return searchResults;
     }
 
+    handleClick(producto){
+        const {navigation : nav} = this.props;
+        // event.preventDefault();
+
+        let datosCompra = {
+            cantidad_producto : 1,
+            producto : producto
+        }
+    
+        // console.log(datosCompra)
+        return nav("/compra-producto", {replace : true, state: datosCompra})
+    }
+    
     render() {
 
         // console.log(Cookies.get("cacheDatos"))
@@ -102,7 +116,7 @@ class Index extends Component {
                     <Col lg="3" md="6" sm="6"> 
                         <Card className="w-100 my-2 shadow-2-strong">
                             <Container as={"div"} className="text-center" style={{"transform": "rotate(0)"}}>
-                                <CardImg src={producto.direccion_imagen} style={{"aspectRatio": "1 / 1"}}/>                   
+                                <CardImg className="mt-3" src={producto.direccion_imagen} style={{"aspectRatio": "1 / 1"}}/>                   
                                 <Card.Body className="d-flex flex-column">
                                     <Card.Title>
                                         <Producto props={producto}/>  
@@ -113,7 +127,7 @@ class Index extends Component {
                                 </Card.Body>
                             </Container>
                             <Card.Footer as="div" className="d-grid gap-2">
-                                    <Button>
+                                    <Button onClick={() => this.handleClick(producto)}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-cart" viewBox="0 0 16 16">
                                             <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                                         </svg>
@@ -181,4 +195,10 @@ class Index extends Component {
     }
 }
 
-export default Index
+// export default Index
+
+export default function Index(props) {
+    const navigation = useNavigate();
+
+    return <IndexClass {...props} navigation={navigation} />;
+}
