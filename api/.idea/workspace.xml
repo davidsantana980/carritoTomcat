@@ -11,7 +11,10 @@
   <component name="ChangeListManager">
     <list default="true" id="60105e22-55da-4b21-afa8-2a08f1d36456" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorCategoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorCategoria.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorPedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorPedido.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Producto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Producto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/vistas/ComprarProducto.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/vistas/ComprarProducto.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +24,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Servlet" />
         <option value="Class" />
+        <option value="Servlet" />
       </list>
     </option>
   </component>
@@ -65,12 +68,12 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;cliente&quot;,
     &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/david/OneDrive/Documentos/Coding/Java/proyectos tecno/carritoTomcat&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/david/Downloads/commons-fileupload2-2.0.0-M1-bin/commons-fileupload2-2.0.0-M1&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
@@ -207,7 +210,13 @@
       <workItem from="1693940905098" duration="3158000" />
       <workItem from="1694040377132" duration="9766000" />
       <workItem from="1694091073970" duration="3867000" />
-      <workItem from="1694107116153" duration="3736000" />
+      <workItem from="1694107116153" duration="3740000" />
+      <workItem from="1694179849868" duration="5510000" />
+      <workItem from="1694463570313" duration="1859000" />
+      <workItem from="1694527331658" duration="4294000" />
+      <workItem from="1694559840245" duration="611000" />
+      <workItem from="1694645041815" duration="629000" />
+      <workItem from="1694700875441" duration="3050000" />
     </task>
     <servers />
   </component>
@@ -219,7 +228,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorPedido.java</url>
-          <line>52</line>
+          <line>53</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

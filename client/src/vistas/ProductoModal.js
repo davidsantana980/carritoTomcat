@@ -1,11 +1,33 @@
 import { useState } from "react";
-import { Button, ButtonGroup, Card, Col, Container, ListGroup, Modal} from "react-bootstrap";
-import CardHeader from "react-bootstrap/esm/CardHeader";
-import { LinkContainer } from "react-router-bootstrap";
+import { Button, ButtonGroup, Card, Col, Container, ListGroup, Modal, Row} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+// import Cookies from 'js-cookie';
 
 let DetallesProducto = (props) => {
     let info = {...props.props}
-   
+    let nav = useNavigate();
+
+    let handleCompra = (event) => {
+        event.preventDefault();
+
+        // const form = event.currentTarget;
+
+        // if (form.checkValidity() === false) {
+        //     event.preventDefault();
+        //     event.stopPropagation();
+        //     return
+        // }
+      
+        // setValidated(true)
+
+        let datosCompra = {
+            cantidad_producto : 1,
+            producto : info
+        }
+
+        return nav("/compra-producto", {replace : true, state: datosCompra})
+    } 
+
     return (
         <Modal
           {...props}
@@ -16,8 +38,26 @@ let DetallesProducto = (props) => {
             <Modal.Body>
                 <Container >
                     <Card>
+                        <Card.Img className="" src={info.direccion_imagen} style={{"aspectRatio": "1 / 1"}}></Card.Img>
                         <Card.Body>
-                            <Card.Title className="mb-3">{info.nombre}</Card.Title>
+                            <Card.Title className="mb-3">
+                                <Row>
+                                    <Col>
+                                        <span>
+                                            {info.nombre}
+                                        </span>
+                                    </Col>
+                                    <Col>
+                                        <ButtonGroup className="flex-wrap float-end">
+                                            <Card.Link>
+                                                <Button size="sm" onClick={handleCompra}>
+                                                    Comprar
+                                                </Button>
+                                            </Card.Link>
+                                        </ButtonGroup>
+                                    </Col>
+                                </Row>
+                            </Card.Title>
                             <hr/>
                             <Card.Subtitle className="mb-3 text-muted mt-2">
                                 <Card.Text as="div">
@@ -48,19 +88,19 @@ export default function Producto (props) {
     if(!info){
         return (
             <Container>
-                <h1>Unexpected error, issue not found</h1>
+                <h1>Error inesperado, no se consiguió el producto</h1>
             </Container>
         )
     }
 
     return (
-        <a className="stretched-link btn shadow-none"  style={{"textDecoration" : "none"}} onClick={() => setDetailsModal({show: true, props: info})}>
+        <span className="stretched-link btn shadow-none"  style={{"textDecoration" : "none"}} onClick={() => setDetailsModal({show: true, props: info})}>
             <span>{info.nombre}</span>
             <DetallesProducto 
                 show={detailsModal.show}
                 onHide={() => setDetailsModal({show :false})}
                 props={detailsModal.props}
             />
-        </a>        
+        </span>        
     )
 }

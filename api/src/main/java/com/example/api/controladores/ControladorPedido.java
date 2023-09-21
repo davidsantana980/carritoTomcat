@@ -31,6 +31,7 @@ public class ControladorPedido extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
+        response.addHeader("Access-Control-Allow-Origin", "*");
 
         PrintWriter print = response.getWriter();
 
@@ -76,6 +77,7 @@ public class ControladorPedido extends HttpServlet {
         pool = conexion.connect();
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
+        response.addHeader("Access-Control-Allow-Origin", "*");
 
         PrintWriter print = response.getWriter();
 
