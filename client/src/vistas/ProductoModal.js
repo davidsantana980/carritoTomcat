@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { Button, ButtonGroup, Card, Col, Container, ListGroup, Modal, Row} from "react-bootstrap";
-import CardHeader from "react-bootstrap/esm/CardHeader";
-import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 // import Cookies from 'js-cookie';
 
@@ -40,16 +38,23 @@ let DetallesProducto = (props) => {
             <Modal.Body>
                 <Container >
                     <Card>
+                        <Card.Img className="" src={info.direccion_imagen} style={{"aspectRatio": "1 / 1"}}></Card.Img>
                         <Card.Body>
                             <Card.Title className="mb-3">
                                 <Row>
-                                    <Col lg="10">
-                                        {info.nombre}
+                                    <Col>
+                                        <span>
+                                            {info.nombre}
+                                        </span>
                                     </Col>
-                                    <Col lg="2">
-                                        <Button onClick={handleCompra}>
-                                            Comprar
-                                        </Button>
+                                    <Col>
+                                        <ButtonGroup className="flex-wrap float-end">
+                                            <Card.Link>
+                                                <Button size="sm" onClick={handleCompra}>
+                                                    Comprar
+                                                </Button>
+                                            </Card.Link>
+                                        </ButtonGroup>
                                     </Col>
                                 </Row>
                             </Card.Title>
@@ -89,13 +94,13 @@ export default function Producto (props) {
     }
 
     return (
-        <a className="stretched-link btn shadow-none"  style={{"textDecoration" : "none"}} onClick={() => setDetailsModal({show: true, props: info})}>
+        <span className="stretched-link btn shadow-none"  style={{"textDecoration" : "none"}} onClick={() => setDetailsModal({show: true, props: info})}>
             <span>{info.nombre}</span>
             <DetallesProducto 
                 show={detailsModal.show}
                 onHide={() => setDetailsModal({show :false})}
                 props={detailsModal.props}
             />
-        </a>        
+        </span>        
     )
 }

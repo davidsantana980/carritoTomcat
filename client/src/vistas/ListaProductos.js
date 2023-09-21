@@ -53,18 +53,6 @@ export default function ListaProductos(){
         return loadItems
     }, [state.dataIsLoaded, loadItems, nav, params])
 
-    function ReturnButton  (props) {
-        return (
-            <Container className="d-grid mt-3">
-                <LinkContainer to={`/`} >
-                    <Button variant="primary" size="lg">
-                        Go back to main menu
-                    </Button>
-                </LinkContainer> 
-            </Container>
-        )
-    }
-
     if(state.dataIsLoaded){
         let productoCards = state.listaDeProductos.map((producto, index) => {
             return (
@@ -79,28 +67,13 @@ export default function ListaProductos(){
                                             </Card.Title>
                                             <Card.Text>
                                                 {producto.descripcion ? (
-                                                    <span><b>{producto.descripcion}</b></span>
+                                                    <span className="text-muted" >${producto.precio}</span>
                                                 ) : (
                                                     "Mira mas detalles"
                                                 )}
                                             </Card.Text>
                                         </Container>    
                                     </Col>
-                                </Row>
-                                <Row >
-                                    <Container>
-                                        {/* <ButtonGroup className="flex-wrap">
-                                            <Card.Link as={Button} className="btn btn-dark">
-                                                <Issue props={producto}/>
-                                            </Card.Link>
-                                            <Card.Link as={Button} className={`btn ${producto.open ? "btn-success" : "btn-primary"}`}>
-                                                <span onClick={() => closeIssue({_id: producto._id , open: !producto.open})} >{producto.open ? "Close this producto" : "Re-open producto"}</span>
-                                            </Card.Link>                     
-                                            <Card.Link as={Button} className="btn btn-secondary">
-                                                <UpdateIssueForm  props = {producto}>Update producto</UpdateIssueForm>
-                                            </Card.Link>
-                                        </ButtonGroup> */}
-                                    </Container>
                                 </Row>
                             </Card.Body>
                         </Card>
@@ -110,8 +83,8 @@ export default function ListaProductos(){
 
         return (
             <>
-                <Container fluid className="mt-1 p-3  col-lg-8 border bg-light">
-                    <text className="display-6">Resultados:</text>
+                <Container fluid className="mt-1 mb-2 p-3  col-lg-8 border bg-light">
+                    <span className="display-6">Resultados:</span>
                 </Container>
                 <Container className="border col-md-12 col-lg-8 mb-5" >
                     <CardGroup className="mt-3">

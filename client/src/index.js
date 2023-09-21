@@ -28,6 +28,9 @@ function CustomNavbar() {
             <LinkContainer to="/agrega-producto">
               <Nav.Link>Agregar producto</Nav.Link>
             </LinkContainer>
+            <LinkContainer to="/pedidos">
+              <Nav.Link>Mis pedidos</Nav.Link>
+            </LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Container>
