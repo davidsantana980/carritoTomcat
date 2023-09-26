@@ -10,11 +10,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60105e22-55da-4b21-afa8-2a08f1d36456" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/modelos/Usuario.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorPedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorPedido.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Producto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Producto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/DB/DBAdmin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/DB/DBAdmin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/DB/DBConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/DB/DBConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/HelloServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/HelloServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorCategoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/controladores/ControladorCategoria.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorPedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/controladores/ControladorPedido.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/controladores/ControladorProducto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Categoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/modelos/Categoria.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/DetallePedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/modelos/DetallePedido.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Pedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/modelos/Pedido.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Producto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/modelos/Producto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/Rutas.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/Rutas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/vistas/AgregaProductosForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/vistas/AgregaProductosForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/vistas/BuscarProducto.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/src/vistas/ComprarProducto.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/vistas/ComprarProducto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/vistas/Index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/vistas/Index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/vistas/ListaPedidos.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/vistas/ListaPedidos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/vistas/ListaProductos.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/vistas/ListaProductos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/vistas/PedidoModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/src/vistas/ProductoModal.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,8 +45,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Servlet" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -86,6 +107,11 @@
     ]
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.carritotomcat.api.utilidades" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Tomcat 10.1.11" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10.1.11" ALTERNATIVE_JRE_ENABLED="false">
       <option name="UPDATING_POLICY" value="redeploy-artifacts" />
@@ -216,7 +242,16 @@
       <workItem from="1694527331658" duration="4294000" />
       <workItem from="1694559840245" duration="611000" />
       <workItem from="1694645041815" duration="629000" />
-      <workItem from="1694700875441" duration="3050000" />
+      <workItem from="1694700875441" duration="3587000" />
+      <workItem from="1694807538911" duration="2610000" />
+      <workItem from="1695152730532" duration="1885000" />
+      <workItem from="1695242406236" duration="1280000" />
+      <workItem from="1695346926671" duration="2000" />
+      <workItem from="1695387448148" duration="9013000" />
+      <workItem from="1695407997161" duration="1985000" />
+      <workItem from="1695419402086" duration="2518000" />
+      <workItem from="1695663888824" duration="10770000" />
+      <workItem from="1695688431866" duration="371000" />
     </task>
     <servers />
   </component>
@@ -227,19 +262,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorPedido.java</url>
-          <line>53</line>
+          <url>file://$PROJECT_DIR$/src/main/java/com/carritotomcat/api/controladores/ControladorPedido.java</url>
+          <line>51</line>
           <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java</url>
-          <line>80</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java</url>
-          <line>29</line>
-          <option name="timeStamp" value="15" />
         </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.lang.IllegalArgumentException" package="java.lang" />

@@ -1,25 +1,8 @@
 import { useState, useEffect, useCallback } from "react"
-import {  Button, ButtonGroup, Card, CardGroup, Col, Container, Row } from "react-bootstrap"
-import { LinkContainer } from "react-router-bootstrap"
-// import { useLocation, useNavigate } from "react-router-dom"
-// import Producto from "./ProductoModal";
-import Pedido from "./PedidoModal";
+import {  Alert, Button, Card, CardGroup, Col, Container, Row } from "react-bootstrap"
+import Pedido from "./modales/PedidoModal";
 
 function ListaPedidos() {
-    //get query params from location reference
-    // let nav = useNavigate();
-    // let {state : params} = useLocation();
-    // //copy params
-    // let queryParams = useMemo(() => {
-    //     return {...params}
-    // }, [params])
-
-    // if(!!params){ 
-    //     //delete undefined body parameters EXCEPT FOR "open", which is a boolean and can be falsy
-    //     Object.keys(params).forEach(key => {
-    //         return !queryParams[key] && typeof(queryParams[key]) !== "boolean" ? delete queryParams[key] : {}
-    //     });
-    // }
 
     const [state, changeState] = useState({
         listaDePedidos : [],
@@ -54,7 +37,7 @@ function ListaPedidos() {
     }, [loadItems])
 
     if(state.dataIsLoaded){
-        let pedidoCards = state.listaDePedidos.map((pedido, index) => {
+        let PedidoCards = () => state.listaDePedidos.map((pedido, index) => {
             return (
                     <Container fluid key={index} className="mb-2">
                         <Card key={index} className="text-center">
@@ -68,6 +51,8 @@ function ListaPedidos() {
                                             <Card.Text>
                                                 <span><b>{pedido.fecha_pedido}</b></span>
                                             </Card.Text>
+                                            <Alert variant="danger" hidden={pedido.pagado}>¡Este pedido está pendiente!</Alert>
+                                            <Alert variant="success" hidden={!pedido.pagado}>¡Este pedido ha sido pagado!</Alert>
                                         </Container>    
                                     </Col>
                                 </Row>
@@ -80,11 +65,11 @@ function ListaPedidos() {
         return (
             <>
                 <Container fluid className="mt-1 p-3 col-lg-8 border bg-light">
-                    <span className="display-6">Tus pedidos pendientes:</span>
+                    <span className="display-6">Tus pedidos:</span>
                 </Container>
                 <Container className="border col-md-12 col-lg-8 mb-5" >
                     <CardGroup className="mt-3">
-                        {pedidoCards}
+                        <PedidoCards />
                     </CardGroup>
                 </Container>
             </>

@@ -1,4 +1,4 @@
-package com.example.api.modelos;
+package com.carritotomcat.api.modelos;
 
 public class Categoria {
     int id;

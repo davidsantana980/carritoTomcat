@@ -1,7 +1,7 @@
-package com.example.api.controladores;
+package com.carritotomcat.api.controladores;
 
-import com.example.api.DB.DBConfig;
-import com.example.api.modelos.Categoria;
+import com.carritotomcat.api.DB.DBConfig;
+import com.carritotomcat.api.modelos.Categoria;
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "ControladorCategoria", value = {"/ControladorCategoria"})
+@WebServlet(name = "ControladorCategoria", value = {"/ControladorCategoria", "/api/categorias"})
 public class ControladorCategoria extends HttpServlet {
     private static DBConfig conexion = new DBConfig();
     private static Connection pool;
@@ -26,7 +26,6 @@ public class ControladorCategoria extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         pool = conexion.connect();
         PrintWriter print = response.getWriter();
-        response.addHeader("Access-Control-Allow-Origin", "*");
 
 //        String id = request.getParameter("id");
 

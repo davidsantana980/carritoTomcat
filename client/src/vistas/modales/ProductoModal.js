@@ -1,25 +1,12 @@
 import { useState } from "react";
 import { Button, ButtonGroup, Card, Col, Container, ListGroup, Modal, Row} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-// import Cookies from 'js-cookie';
 
 let DetallesProducto = (props) => {
     let info = {...props.props}
     let nav = useNavigate();
 
-    let handleCompra = (event) => {
-        event.preventDefault();
-
-        // const form = event.currentTarget;
-
-        // if (form.checkValidity() === false) {
-        //     event.preventDefault();
-        //     event.stopPropagation();
-        //     return
-        // }
-      
-        // setValidated(true)
-
+    let handleCompra = () => {
         let datosCompra = {
             cantidad_producto : 1,
             producto : info
@@ -38,7 +25,7 @@ let DetallesProducto = (props) => {
             <Modal.Body>
                 <Container >
                     <Card>
-                        <Card.Img className="" src={info.direccion_imagen} style={{"aspectRatio": "1 / 1"}}></Card.Img>
+                        <Card.Img className="" hidden={!info.direccion_imagen} src={info.direccion_imagen} style={{"aspectRatio": "1 / 1"}}></Card.Img>
                         <Card.Body>
                             <Card.Title className="mb-3">
                                 <Row>

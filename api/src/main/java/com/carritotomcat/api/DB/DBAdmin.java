@@ -1,12 +1,9 @@
-package com.example.api.DB;
+package com.carritotomcat.api.DB;
 
-import com.sun.jdi.connect.Connector;
-
-import java.io.PrintWriter;
 import java.sql.*;
 
 public class DBAdmin {
-    private static DBConfig conexion = new DBConfig();
+    public static DBConfig conexion = new DBConfig();
     private static Connection pool;
 
     public static ResultSet consultaMuchos(String consultaString) throws  Exception{

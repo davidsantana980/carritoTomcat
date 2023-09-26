@@ -1,15 +1,13 @@
-package com.example.api.controladores;
+package com.carritotomcat.api.controladores;
 
-import com.example.api.DB.DBConfig;
-import com.example.api.modelos.Producto;
+import com.carritotomcat.api.DB.DBConfig;
+import com.carritotomcat.api.modelos.Producto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
-import org.apache.commons.lang3.StringUtils;
-import org.postgresql.util.PSQLException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,12 +29,12 @@ public class ControladorProducto extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        response.addHeader("Access-Control-Allow-Origin", "*");
 
         String nombre = request.getParameter("nombre");
         String categoria_id = request.getParameter("categoria_id");
         String buscaTodos = request.getParameter("buscaTodos");
         PrintWriter print = response.getWriter();
+
 
         try {
             String consulta = "SELECT * FROM productos ORDER BY id";
@@ -88,7 +86,6 @@ public class ControladorProducto extends HttpServlet {
             pool = conexion.connect();
             response.setContentType("application/json");
             response.setCharacterEncoding("utf-8");
-            response.addHeader("Access-Control-Allow-Origin", "*");
 
 
             PrintWriter print = response.getWriter();
@@ -243,8 +240,17 @@ public class ControladorProducto extends HttpServlet {
                 PreparedStatement query = pool.prepareStatement(insertaQ, Statement.RETURN_GENERATED_KEYS);
                 query.setInt(1, resultado.getInt("categoria_id"));
                 ResultSet categoria = query.executeQuery();
-                categoria.next();
-                resultObj.setCategoria_string(categoria.getString("nombre"));
+                if(categoria.next()) {
+                    resultObj.setCategoria_string(categoria.getString("nombre"));
+                }
+
+                insertaQ = "SELECT direccion_imagen\n FROM public.imagenes_producto WHERE id_producto = (?)";
+                query = pool.prepareStatement(insertaQ, Statement.RETURN_GENERATED_KEYS);
+                query.setInt(1, resultObj.getId());
+                ResultSet imagen_path = query.executeQuery();
+                if(imagen_path.next()) {
+                    resultObj.setDireccion_imagen(imagen_path.getString("direccion_imagen"));
+                }
 
                 resultObjArr.add(resultObj);
             }while(resultado.next());

@@ -1,20 +1,19 @@
 import { useState, useEffect, useCallback, useMemo } from "react"
-import { Badge, Button, ButtonGroup, Card, CardGroup, Col, Container, Row } from "react-bootstrap"
-import { LinkContainer } from "react-router-bootstrap"
+import { Button, Card, CardGroup, Col, Container, Row } from "react-bootstrap"
 import { useLocation, useNavigate } from "react-router-dom"
-import Producto from "./ProductoModal";
+import Producto from "./modales/ProductoModal";
 
 export default function ListaProductos(){
-    //get query params from location reference
+    //recibe los parametros
     let nav = useNavigate();
     let {state : params} = useLocation();
-    //copy params
+    //copia los parametros a una variable local
     let queryParams = useMemo(() => {
         return {...params}
     }, [params])
 
     if(!!params){ 
-        //delete undefined body parameters EXCEPT FOR "open", which is a boolean and can be falsy
+        //si hay parametros, borra los indefinidos
         Object.keys(params).forEach(key => {
             return !queryParams[key] && typeof(queryParams[key]) !== "boolean" ? delete queryParams[key] : {}
         });
@@ -28,8 +27,6 @@ export default function ListaProductos(){
     
     let loadItems = useCallback(() => {
         let url = `http://localhost:8080/api/productos?${new URLSearchParams(queryParams).toString()}` 
-
-        console.log(url)
         
         fetch(url)
         .then((res) => res.json()) //take the response string and turn it into a json array

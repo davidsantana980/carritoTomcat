@@ -1,15 +1,13 @@
-import { Form, Button, Container, Row, Badge } from "react-bootstrap";
+import { Form, Button, Container, Badge } from "react-bootstrap";
 import {useEffect, useState} from "react";
-import { LinkContainer } from "react-router-bootstrap";
 
 let CategoriasDropdown = () => {
-    // try{
         const [state, setState] = useState({
             categoriasArr : []
         });
         
         const fetchData = () => {
-            fetch("http://localhost:8080" + "/ControladorCategoria")
+            fetch("http://localhost:8080/api/categorias")
             .then(res => res.json())
             .then((json) => { //take the json array from the previous step...
                 setState({
@@ -38,12 +36,9 @@ let CategoriasDropdown = () => {
                 <Options/>
             </>
         );
-    // }catch(e){
-    //     console.log(e);
-    // }
 }
 
-export default function AgregaProductosForm() {
+export default function AgregaProductos() {
     const [productoObj, setProject] = useState({
       nombre: "",
       descripcion: "",
@@ -77,7 +72,7 @@ export default function AgregaProductosForm() {
         
         setValidated(true)
         
-        fetch("http://localhost:8080" + "/api/productos", {
+        fetch("http://localhost:8080/api/productos", {
           method: "POST",
           body: new URLSearchParams(productoObj),
         })
@@ -89,8 +84,6 @@ export default function AgregaProductosForm() {
           console.log(error)
         })
     }
-
-    // console.log(JSON.parse(window.localStorage.getItem("x")))
   
     return (
         <Container className="mt-2">
