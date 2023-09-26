@@ -1,17 +1,58 @@
 import { useState } from "react";
 import { Button, ButtonGroup, Card, Col, Container, ListGroup, Modal, Row} from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 // import Cookies from 'js-cookie';
 
 let DetallesPedido = (props) => {
     let info = {...props.props}
 
-    let handlePago = (evt) => {
-        evt.preventDefault();
+    const [pedidoPagado, setPedidoPagado] = useState(info.pagado || false);
+
+    let handleEliminar = () => {
+        let pedido_id = info.id_pedido
+
+        try{
+            fetch("http://localhost:8080/api/pedidos?pedido_id=" + pedido_id, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(result => {
+                return window.location.reload(false);
+            })
+        }catch(e){
+            console.log(e)
+        }
+                            
+    }
+
+    let handlePago = () => {
+        let pago = {
+            pedido_id : info.id_pedido,
+            pedido_pagado : true
+        }
+
+        try{
+            fetch("http://localhost:8080/api/pedidos?" + new URLSearchParams(pago), {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(result => {
+                if(result.mensaje){
+                    setPedidoPagado(true)
+                }
+            })
+        }catch(e){
+            console.log(e)
+        }
 
     }
 
-    let PedidosComprados = () => {
+    let ProductosComprados = () => {
         if(!!info.productos_comprados.length){
             let Total = () => {
                 return info.productos_comprados.map(pedido => {
@@ -54,28 +95,6 @@ let DetallesPedido = (props) => {
     }
 
 
-    // let handleCompra = (event) => {
-    //     event.preventDefault();
-
-    //     // const form = event.currentTarget;
-
-    //     // if (form.checkValidity() === false) {
-    //     //     event.preventDefault();
-    //     //     event.stopPropagation();
-    //     //     return
-    //     // }
-      
-    //     // setValidated(true)
-
-    //     let datosCompra = {
-    //         cantidad_pedido : 1,
-    //         pedido : info
-    //     }
-
-    //     return nav("/compra-pedido", {replace : true, state: datosCompra})
-    // } 
-
-    console.log(JSON.stringify(props.show))
     return (
         <Modal
           {...props}
@@ -97,6 +116,11 @@ let DetallesPedido = (props) => {
                                     <Col>
                                         <ButtonGroup className="flex-wrap float-end">
                                             <Card.Link>
+                                                <Button size="sm" variant="danger" onClick={handleEliminar}>
+                                                    Cancelar
+                                                </Button>
+                                            </Card.Link>
+                                            <Card.Link>
                                                 <Button size="sm" onClick={handlePago}>
                                                     Pagar
                                                 </Button>
@@ -108,13 +132,13 @@ let DetallesPedido = (props) => {
                             <hr/>
                             <Card.Subtitle className="mb-3 text-muted mt-2">
                                 <Card.Text as="div">
-                                    <b>{info.pagado ? "Pedido pagado" : "Pedido pendiente"}</b> 
+                                    <b>{pedidoPagado ? "Pedido pagado" : "Pedido pendiente"}</b> 
                                 </Card.Text>
                             </Card.Subtitle>
                             <hr/>
                             {
                                 info.productos_comprados.length && 
-                                <PedidosComprados/>
+                                <ProductosComprados/>
                             }
                         </Card.Body>
                         <Card.Footer>Precio total: {info.precio_total_pedido}</Card.Footer>
@@ -130,8 +154,6 @@ export default function Pedido (props) {
     let info = {...props.props};
     const [detailsModal, setDetailsModal] = useState({show: false, props : {}});
     
-
-
     if(!info){
         return (
             <Container>
@@ -139,9 +161,6 @@ export default function Pedido (props) {
             </Container>
         )
     }
-
-    console.log(detailsModal.show)
-
 
     return (
         <>

@@ -1,6 +1,6 @@
-package com.example.api;
+package com.carritotomcat.api;
 
-import com.example.api.DB.DBConfig;
+import com.carritotomcat.api.DB.DBAdmin;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,14 +10,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 
-import static com.example.api.DB.DBAdmin.*;
-
 @WebServlet(name = "helloServlet", value = "/hello-servlet")
 public class HelloServlet extends HttpServlet {
     private String message;
 
     public void init() {
-        message = "Hello World!";
+        message = "Hello World! Server iniciado";
     }
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
@@ -27,7 +25,7 @@ public class HelloServlet extends HttpServlet {
         out.println("<html><body>");
 
         try {
-            ResultSet resultados = consultaMuchos(consulta);
+            ResultSet resultados = DBAdmin.consultaMuchos(consulta);
 
             if(resultados.next()){
                 do {
@@ -51,7 +49,7 @@ public class HelloServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String nombre = request.getParameter("nombre");
-            agregaElemento(nombre);
+            DBAdmin.agregaElemento(nombre);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (Exception e){
@@ -64,7 +62,7 @@ public class HelloServlet extends HttpServlet {
         try {
 
             String id = request.getParameter("id");
-            borraPorID(id);
+            DBAdmin.borraPorID(id);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (Exception e){
@@ -80,7 +78,7 @@ public class HelloServlet extends HttpServlet {
             String id = request.getParameter("id");
             String nuevoNombre = request.getParameter("nombre");
 
-            modificaPorId(id, nuevoNombre);
+            DBAdmin.modificaPorId(id, nuevoNombre);
 
         } catch (SQLException e) {
             e.printStackTrace();

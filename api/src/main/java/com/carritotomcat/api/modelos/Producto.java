@@ -1,4 +1,4 @@
-package com.example.api.modelos;
+package com.carritotomcat.api.modelos;
 
 import java.io.Serializable;
 
@@ -6,6 +6,16 @@ public class Producto implements Serializable {
     private int id;
     private String nombre;
     private String descripcion;
+
+    public String getDireccion_imagen() {
+        return direccion_imagen;
+    }
+
+    public void setDireccion_imagen(String direccion_imagen) {
+        this.direccion_imagen = direccion_imagen;
+    }
+
+    private String direccion_imagen;
 
     private boolean disponible;
 

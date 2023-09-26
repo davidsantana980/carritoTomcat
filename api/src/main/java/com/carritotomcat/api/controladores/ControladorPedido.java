@@ -1,9 +1,8 @@
-package com.example.api.controladores;
+package com.carritotomcat.api.controladores;
 
-import com.example.api.DB.DBConfig;
-import com.example.api.modelos.DetallePedido;
-import com.example.api.modelos.Pedido;
-import com.example.api.modelos.Producto;
+import com.carritotomcat.api.DB.DBConfig;
+import com.carritotomcat.api.modelos.DetallePedido;
+import com.carritotomcat.api.modelos.Pedido;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -19,7 +18,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.*;
 
-@WebServlet(name = "ControladorPedido", value = "/ControladorPedido")
+@WebServlet(name = "ControladorPedido", value = {"/ControladorPedido", "/api/pedidos"})
 public class ControladorPedido extends HttpServlet {
     private static DBConfig conexion = new DBConfig();
     private static Connection pool;
@@ -31,7 +30,6 @@ public class ControladorPedido extends HttpServlet {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        response.addHeader("Access-Control-Allow-Origin", "*");
 
         PrintWriter print = response.getWriter();
 
@@ -77,7 +75,6 @@ public class ControladorPedido extends HttpServlet {
         pool = conexion.connect();
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        response.addHeader("Access-Control-Allow-Origin", "*");
 
         PrintWriter print = response.getWriter();
 
@@ -256,7 +253,11 @@ public class ControladorPedido extends HttpServlet {
             query.execute();
 
             response.setStatus(200);
-            print.print(gson.toJson("ok"));
+
+            Map<String, String> resObj = new HashMap<>();
+            resObj.put("exito", "pedido eliminado");
+
+            print.print(gson.toJson(resObj));
         } catch (Exception e) {
 //                e.printStackTrace();
             Map<String, String> errorObj = new HashMap<>();

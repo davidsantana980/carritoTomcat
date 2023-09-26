@@ -1,11 +1,8 @@
 import { Component } from "react";
-import { Container, Card, Button, Row, Col, ButtonGroup, CardImg } from "react-bootstrap";
+import { Container, Card, Button, Row, Col, ButtonGroup } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-// import ListaProductos from "./Lista";
-import Producto from "./ProductoModal";
+import Producto from "./modales/ProductoModal";
 import { useNavigate } from "react-router-dom";
-// import Cookies from "js-cookie";
-// require('dotenv').config();
 
 
 class IndexClass extends Component {
@@ -20,12 +17,12 @@ class IndexClass extends Component {
 
     async componentDidMount(){
         try{
-            await fetch("http://localhost:8080" + "/api/productos?buscaTodos=true") //?open=true")
-            .then((res) => res.json()) //take the response string and turn it into a json array
-            .then((json) => { //take the json array from the previous step...
+            await fetch("http://localhost:8080/api/productos?buscaTodos=true") 
+            .then((res) => res.json()) 
+            .then((json) => { 
                 this.setState({
-                    allProductos: json, //...and make our this.state.items<Array> == the JSON<Array> response
-                    dataIsLoaded:true //changed status
+                    allProductos: json, 
+                    dataIsLoaded:true 
                 })
             })
             .catch((error) => {
@@ -74,13 +71,11 @@ class IndexClass extends Component {
             producto : producto
         }
     
-        // console.log(datosCompra)
         return nav("/compra-producto", {replace : true, state: datosCompra})
     }
     
     render() {
 
-        // console.log(Cookies.get("cacheDatos"))
         let CategoriaCards = () => {
             let parCategoriaCantidad = this.categoriasUnicas("categoria_string");
 
@@ -111,12 +106,11 @@ class IndexClass extends Component {
 
         let ProductoCards = () => {
             let ProductosAr = this.state.allProductos.map((producto, index) => {
-                // index === 0 && console.log(producto.direccion_imagen)
                 return (
                     <Col lg="3" md="6" sm="6"> 
-                        <Card className="w-100 my-2 shadow-2-strong">
+                        <Card key={index} className="w-100 my-2 shadow-2-strong">
                             <Container as={"div"} className="text-center" style={{"transform": "rotate(0)"}}>
-                                <CardImg className="mt-3" src={producto.direccion_imagen} style={{"aspectRatio": "1 / 1"}}/>                   
+                                <Card.Img className="mt-3" hidden={!producto.direccion_imagen} src={producto.direccion_imagen} style={{"aspectRatio": "1 / 1"}}/>                   
                                 <Card.Body className="d-flex flex-column">
                                     <Card.Title>
                                         <Producto props={producto}/>  

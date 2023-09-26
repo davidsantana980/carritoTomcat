@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Container,  Nav, NavDropdown, Navbar } from "react-bootstrap";
 import {LinkContainer} from "react-router-bootstrap"
 import Rutas from './Rutas';
-import BuscarProducto from './vistas/BuscarProducto';
+import BuscarProducto from './vistas/formularios/BuscarProducto';
 
 function CustomNavbar() {
   return (
