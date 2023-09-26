@@ -105,7 +105,13 @@ export default function ComprarProducto () {
                                 </ListGroup>
                             </Card.Body>
                             <Card.Footer className="py-2 text-center">
-                                <Button onClick={() => setModal({show:true})} className="btn-success btn-lg w-100">
+                                <Button 
+                                    onClick={() => { 
+                                        datosCompra.cantidad_producto = cantidad;
+                                        return setModal({show:true})
+                                    }}
+                                    className="btn-success btn-lg w-100"
+                                >
                                     Confirmar compra
                                 </Button>
                             </Card.Footer>
