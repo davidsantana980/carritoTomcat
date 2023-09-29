@@ -10,32 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60105e22-55da-4b21-afa8-2a08f1d36456" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/modelos/Usuario.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/DB/DBAdmin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/DB/DBAdmin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/DB/DBConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/DB/DBConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/HelloServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/HelloServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorCategoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/controladores/ControladorCategoria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorPedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/controladores/ControladorPedido.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/controladores/ControladorProducto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/controladores/ControladorProducto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Categoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/modelos/Categoria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/DetallePedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/modelos/DetallePedido.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Pedido.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/modelos/Pedido.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/api/modelos/Producto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/carritotomcat/api/modelos/Producto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/Rutas.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/Rutas.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/vistas/AgregaProductosForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/vistas/AgregaProductosForm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/vistas/BuscarProducto.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/vistas/ComprarProducto.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/vistas/ComprarProducto.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/vistas/Index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/vistas/Index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../client/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/src/vistas/ListaPedidos.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/vistas/ListaPedidos.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/vistas/ListaProductos.js" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/vistas/ListaProductos.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/vistas/PedidoModal.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/vistas/ProductoModal.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,33 +60,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;cliente&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/david/Downloads/commons-fileupload2-2.0.0-M1-bin/commons-fileupload2-2.0.0-M1&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "prod/build",
+    "jdk.selected.JAVA_MODULE": "17",
+    "last_opened_file_path": "C:/Users/david/OneDrive/Documentos/Coding/Java/proyectos tecno/carritoTomcat/api/src/main/webapp",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "web.server",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\david\OneDrive\Documentos\Coding\Java\proyectos tecno\carritoTomcat\api\src\main\webapp" />
+      <recent name="C:\Users\david\OneDrive\Documentos\Coding\Java\proyectos tecno\carritoTomcat\api\src\main\webapp\static" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.carritotomcat.api.utilidades" />
     </key>
@@ -252,20 +235,42 @@
       <workItem from="1695419402086" duration="2518000" />
       <workItem from="1695663888824" duration="10770000" />
       <workItem from="1695688431866" duration="371000" />
+      <workItem from="1695736011035" duration="24000" />
+      <workItem from="1695760388767" duration="1848000" />
+      <workItem from="1695996723344" duration="224000" />
+      <workItem from="1696003665645" duration="9217000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/prod/build" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/carritotomcat/api/controladores/ControladorPedido.java</url>
-          <line>51</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.lang.IllegalArgumentException" package="java.lang" />
           <option name="timeStamp" value="11" />
