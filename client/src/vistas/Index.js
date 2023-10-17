@@ -73,7 +73,34 @@ class IndexClass extends Component {
     
         return nav("/compra-producto", {replace : true, state: datosCompra})
     }
+
+    handlePost(){
+        let datosUsuario = {
+            email: "mortadela@gmail.com",
+            password: "mortadela"
+        }   
+
+       fetch('http://localhost:8080/ControladorSesion', {
+        method: "POST",
+        credentials:"include",
+        body: new URLSearchParams(datosUsuario)
+       })
+        //    .then(response => response.json())
+        //    .then(data =>{console.log(data);})
+
+    }
     
+    handleGet(){
+        const requestOptions = {
+            method: 'GET',
+            credentials:"include",
+        };
+
+        fetch('http://localhost:8080/api/post',requestOptions)
+        .then(response => response.json())
+        .then(data =>{console.log(data);})
+
+    }
     render() {
 
         let CategoriaCards = () => {
@@ -140,6 +167,8 @@ class IndexClass extends Component {
 
         }
 
+        const value = ('; '+document.cookie).split(`; COOKIE_NAME=`).pop().split(';')[0];
+
         if(!this.state.dataIsLoaded){
             return (
                 <Container fluid className="mt-2 p-4  col-lg-8 border bg-light">
@@ -163,6 +192,7 @@ class IndexClass extends Component {
                 </Container>
             )
         }else{
+            
             return(
                 <Container fluid className="mb-5">
                     <Row>
@@ -181,6 +211,15 @@ class IndexClass extends Component {
                                 <hr/>
                             </Container>
                             <CategoriaCards/>
+                            <Button onClick={this.handlePost}>
+                                POST to /ControladorSesion to get cookie
+                            </Button>
+                            <Button onClick={this.handleGet}>
+                                GET to /api/post to see cookie
+                            </Button>
+                            <span>
+                                {document.cookie}
+                            </span>
                         </Col>
                     </Row>
                 </Container>
