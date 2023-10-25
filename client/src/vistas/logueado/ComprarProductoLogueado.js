@@ -1,31 +1,62 @@
 import { useState } from "react";
 import {  Button, Card, Col, Container, Form, ListGroup, Row } from "react-bootstrap"
 import { Navigate, useLocation } from "react-router-dom";
-// import SesionModal from "./modales/SesionModal";
 // import bootstrap from "bootstrap"; 
 
-export default function ComprarProductoLogueado () {
-    // let {state : datosCompra} = useLocation();
-    let datosCompra = {
-        cantidad_producto : 1,
-        producto : {
-            "id": 21,
-            "nombre": "Coca-Cola",
-            "descripcion": "¡Experimenta la chispa de la felicidad con Coca-Cola! Nuestra bebida refrescante y burbujeante es perfecta para satisfacer tu sed y alegrar cualquier ocasión. Disfruta de su sabor único y refrescante en cada sorbo.",
-            "direccion_imagen": "imagenes/cocacola.jpeg",
-            "disponible": true,
-            "precio": 0.5,
-            "categoria_id": 2,
-            "categoria_string": "Comidas"
-        }
-    }
-
+export default function ComprarProductoLogueado (props = {usuario_id : 0}) {
+    let {state : datosCompra} = useLocation();
 
     let [cantidad, setCantidad] = useState(1)
-    const [modal, setModal] = useState({show: false, _id: "", project: ""});
+    let [pedidoRealizado, setPedidoRealizado] = useState(false)
 
     if(!datosCompra || !Object.keys(datosCompra).length){
         return <Navigate to={"/"} />
+    }
+
+    let handleSubmit = (event) => {
+        event.preventDefault();
+
+        let pedido = {
+            usuario_id : props.usuario_id,
+            productos_comprados : JSON.stringify([
+                {
+                    id_producto : datosCompra.producto.id ,
+                    cantidad_producto : cantidad
+                }
+            ])
+        }
+
+        try{
+            // console.log(JSON.stringify(pedido))
+            fetch("http://localhost:8080/api/pedidos", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams(pedido)
+            })
+            .then(async res => {
+                let json = await res.json()
+
+                return {
+                    ok: res.ok,
+                    ...json
+                }
+            })
+            .then(result => {
+                console.log(result)
+
+                if(result.ok){
+                    setPedidoRealizado(true);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }catch(e){
+            console.log(e)
+        }
     }
 
     let handleClick = (event) => {
@@ -44,7 +75,7 @@ export default function ComprarProductoLogueado () {
                         <p className="display-6">Confirma tu compra:</p> 
                     <hr/>   
                     <Col>
-                        <Button href="/" variant="danger" className="w-100 mb-3" data-mdb-toggle="tooltip" title="Cancelar">           
+                        <Button href="/" variant="danger" className="w-100 mb-3" disabled={pedidoRealizado} data-mdb-toggle="tooltip" title="Cancelar">           
                             Cancelar compra
                         </Button>
                         {/* COMPRA */}
@@ -64,7 +95,7 @@ export default function ComprarProductoLogueado () {
 
                                     <Col lg="4" md="6" className="mb-4 mb-lg-0">
                                         <Form className="d-flex mb-4" style={{"maxWidth": "300px"}}>
-                                            <Button id="minus" className="px-3 me-2" onClick={handleClick}>
+                                        <Button id="minus" className="px-3 me-2" disabled={pedidoRealizado} onClick={handleClick}>
                                                 <i className="fa fa-minus"></i>
                                             </Button>
 
@@ -73,7 +104,7 @@ export default function ComprarProductoLogueado () {
                                                 <Form.Label htmlFor="cantidad">Cantidad</Form.Label>
                                             </Form.Floating>
 
-                                            <Button id="plus" className="px-3 ms-2" onClick={handleClick}>
+                                            <Button id="plus" className="px-3 ms-2" disabled={pedidoRealizado} onClick={handleClick}>
                                                 <i className="fa fa-plus"></i>
                                             </Button>
                                         </Form>
@@ -119,25 +150,24 @@ export default function ComprarProductoLogueado () {
                                 </ListGroup>
                             </Card.Body>
                             <Card.Footer className="py-2 text-center">
-                                <Button 
-                                    onClick={() => { 
-                                        datosCompra.cantidad_producto = cantidad;
-                                        return setModal({show:true})
-                                    }}
-                                    className="btn-success btn-lg w-100"
-                                >
+                            <Button onClick={handleSubmit} disabled={pedidoRealizado} className="btn-success btn-lg w-100">
                                     Confirmar compra
                                 </Button>
                             </Card.Footer>
                         </Card>
-                        {/* <SesionModal 
-                            show={modal.show}
-                            onHide={() => setModal({show :false})}
-                            infoCompra={datosCompra}
-                            protocolo={"compra"}
-                        /> */}
                     </Col>
                     {/* FACTURA */}
+                    <hr className="mt-3"/>
+                    {/* MENSAJE DE EXITO */}
+                    <div className="bg-light w-100 mb-3" hidden={!pedidoRealizado}>
+                        <Container>
+                            <h1 className="display-4">Pedido realizado correctamente!</h1>
+                            <p className="lead" >
+                                Puedes mirar los detalles en el apartado de pedidos.
+                            </p>
+                        </Container>
+                    </div>
+                    {/* MENSAJE DE EXITO */}
                 </Row>
                 <hr/>
             </Container>    

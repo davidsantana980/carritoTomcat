@@ -4,39 +4,8 @@ import './index.css';
 // import reportWebVitals from './reportWebVitals';
 
 import { BrowserRouter } from 'react-router-dom';
-import { Container,  Nav, NavDropdown, Navbar } from "react-bootstrap";
-import {LinkContainer} from "react-router-bootstrap"
-import Rutas from './Rutas';
-import BuscarProducto from './vistas/formularios/BuscarProducto';
-
-function CustomNavbar() {
-  return (
-    <Navbar expand="lg" sticky="top" bg="dark" variant='dark' className='mb-2'>
-      <Container>
-        <LinkContainer to="/">
-          <Navbar.Brand className='lead'>E-Store</Navbar.Brand>
-        </LinkContainer>
-        <Navbar.Toggle aria-controls='basic-navbar-nav'/>
-        <Navbar.Collapse id= "basic-navbar-nav">
-          <Nav>
-            <NavDropdown
-                title="Buscar producto"
-                menuVariant="dark"
-              >
-                <BuscarProducto/>
-              </NavDropdown>
-            <LinkContainer to="/agrega-producto">
-              <Nav.Link>Agregar producto</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/pedidos">
-              <Nav.Link>Mis pedidos</Nav.Link>
-            </LinkContainer>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-  )
-}
+import { Container } from "react-bootstrap";
+import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -45,8 +14,7 @@ root.render(
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
       </head>
-      <CustomNavbar />
-      <Rutas />
+      <App />
       <footer id="footer" className="fixed-bottom mt-3 py-2 bg-dark text-white-50">
           <Container className="text-start">
               Salvador Ochoa, 2023

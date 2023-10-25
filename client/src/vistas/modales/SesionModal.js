@@ -9,7 +9,6 @@ export default function SesionModal (props) {
 
     const [estatus, setEstatus] = useState({
         error: false,
-        exito : false
     });
           
     const handleChange = (event) => {
@@ -22,60 +21,29 @@ export default function SesionModal (props) {
         });
     }
 
-    let handleCompra = (pedido) => {    
-        try{
-            fetch("http://localhost:8080/api/pedidos?", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: new URLSearchParams(pedido)
-            })
-            .then(res => res.json())
-            .then(result => {
-                setEstatus({exito : true})
-            })
-        }catch(e){
-            console.log(e)
-        }
-    }
-
     let handleSubmit = () => {
-        try{
-            let info = {
-                datosUsuario: datosUsuario,
-                infoCompra : props.infoCompra,
-                protocolo : props.protocolo
-            }
-            
-            fetch("http://localhost:8080/ControladorUsuario?" + new URLSearchParams(info.datosUsuario))
-            .then(res => res.json())
-            .then(resultado => {
-                if(!!resultado.length){
-                    setEstatus({error : false})
-                    let usuario_id = resultado[0].id;
-        
-                    if(info.protocolo === "compra") {
-                        let pedido = {
-                            usuario_id,
-                            productos_comprados : JSON.stringify([
-                                {
-                                    id_producto : info.infoCompra.producto.id ,
-                                    cantidad_producto : info.infoCompra.cantidad_producto
-                                }
-                            ])
-                        }
-    
-                        handleCompra(pedido);
-                    }
-                }else{
-                    setEstatus({error : true})
-                }    
+        try{        
+            fetch('http://localhost:8080/api/login', {
+                method: "POST",
+                credentials:"include",
+                body: new URLSearchParams(datosUsuario)
             })
-            .catch(error => {
-                console.log(error)
-            })
+            .then(async res => {
+                let mensaje = await res.json()
 
+                return {
+                    ok : res.ok,
+                    mensaje
+                }
+                
+            })
+            .then(res => {
+                if(!res.ok){
+                    setEstatus({error : !res.ok})
+                }else{
+                    window.location.reload();
+                }
+            })
         }catch(e){
             console.log(e)
         }
@@ -111,9 +79,9 @@ export default function SesionModal (props) {
                 <Alert variant="danger" hidden={!estatus.error} >
                     Usuario o contraseña incorrectos
                 </Alert>
-                <Alert variant="success" hidden={!estatus.exito}>
+                {/* <Alert variant="success" hidden={!estatus.exito}>
                     Pedido realizado correctamente! Puedes mirar los detalles en el apartado de pedidos.
-                </Alert>                                   
+                </Alert>                                    */}
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-center">
                 <Button type="submit" onClick={handleSubmit}>Confirmar datos</Button>

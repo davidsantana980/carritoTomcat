@@ -6,6 +6,15 @@ public class Usuario {
     String email;
     String password;
     String direccion;
+    String tipo;
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
 
     public Usuario() {
     }

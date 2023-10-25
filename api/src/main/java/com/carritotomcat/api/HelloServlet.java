@@ -2,6 +2,7 @@ package com.carritotomcat.api;
 
 import com.carritotomcat.api.DB.DBAdmin;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -48,14 +49,28 @@ public class HelloServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            String nombre = request.getParameter("nombre");
-            DBAdmin.agregaElemento(nombre);
-        } catch (SQLException e) {
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+
+            System.out.println(email + password);
+            Cookie ck = new Cookie("papa", "pepe");
+
+
+            ck.setPath("/");
+            ck.setHttpOnly(true);
+            ck.setMaxAge(5);
+
+            response.addCookie(ck);
+
+
+
+//            request.getRequestDispatcher("http://localhost:3000/").forward(request, response);
+
+            //            DBAdmin.agregaElemento(nombre);
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (Exception e){
-            System.out.println(e.getMessage());
         }finally {
-            response.sendRedirect(request.getContextPath() + "/hello-servlet");
+//            response.sendRedirect(request.getContextPath() + "/hello-servlet");
         }
     }
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {

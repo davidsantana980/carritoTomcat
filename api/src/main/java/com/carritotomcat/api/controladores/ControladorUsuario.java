@@ -16,8 +16,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.carritotomcat.api.utilidades.BuscaUsuario.buscaUsuario;
+
 @WebServlet(name = "ControladorUsuario", value = {"/ControladorUsuario", "/api/usuarios"})
 public class ControladorUsuario extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Connection pool = DBAdmin.conexion.connect();
@@ -32,14 +35,7 @@ public class ControladorUsuario extends HttpServlet {
         String password = request.getParameter("password");
 
         try {
-            String insertaQ = "SELECT id, nombre, email, password, direccion\n" +
-                    "\tFROM public.usuarios WHERE email = (?) AND password = (?)";
-            PreparedStatement query = pool.prepareStatement(insertaQ, Statement.RETURN_GENERATED_KEYS);
-            query.setString(1, email);
-            query.setString(2, password);
-            ResultSet categoria = query.executeQuery();
-
-            ArrayList<Usuario> resp = usuariosOrganizados(categoria);
+            ArrayList<Usuario> resp = buscaUsuario(email, password, pool);
 
             print.print(gson.toJson(resp));
         } catch (Exception e) {
@@ -56,25 +52,57 @@ public class ControladorUsuario extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String nombre = request.getParameter("nombre");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String direccion = request.getParameter("direccion").isBlank() ? "" : request.getParameter("direccion");
+        String tipo = request.getParameter("tipo");
 
-        System.out.println(email + " " + password);
-    }
+        Connection pool = DBAdmin.conexion.connect();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
 
-    private static ArrayList<Usuario> usuariosOrganizados(ResultSet resultado) throws SQLException {
-        ArrayList<Usuario> resultObjArr = new ArrayList<>();
-        if(resultado.next()) {
-            do {
-                Usuario resultObj = new Usuario();
-                resultObj.setId(Integer.parseInt(resultado.getString("id")));
-                resultObj.setEmail(resultado.getString("email"));
+        PrintWriter print = response.getWriter();
 
-                resultObjArr.add(resultObj);
-            }while(resultado.next());
+        Gson gson = new Gson();
+
+        try{
+            Map<String, String> resp = new HashMap<>();
+
+            if(nombre.isBlank() || email.isBlank() || password.isBlank() || tipo.isBlank()) throw new Exception("Argumentos insuficentes");
+
+            String insertaQ = "INSERT INTO public.usuarios(\n" +
+                    "\tnombre, email, password, direccion, tipo)\n" +
+                    "\tVALUES (?, ?, ?, ?, ?)" +
+                    "RETURNING id, nombre, email, tipo" +
+                    ";";
+            PreparedStatement query = pool.prepareStatement(insertaQ, Statement.RETURN_GENERATED_KEYS);
+            query.setString(1, nombre);
+            query.setString(2, email);
+            query.setString(3, password);
+            query.setString(4, direccion);
+            query.setInt(5, Integer.parseInt(tipo));
+
+            int exito = query.executeUpdate();
+            if (exito > 0) {
+                resp.put("exito", "Exito insertando el usuario");
+            } else {
+                throw new Exception("Error insertando el usuario");
+            }
+
+            print.print(gson.toJson(resp));
+        } catch (Exception e) {
+//                e.printStackTrace();
+            response.setStatus(400);
+            Map<String, String> errorObj = new HashMap<>();
+            errorObj.put("error", e.getMessage());
+
+            print.print(gson.toJson(errorObj));
+        }finally{
+            print.flush();
+            DBAdmin.conexion.closeConnection();
         }
 
-        return resultObjArr;
+//        System.out.println(email + " " + password);
     }
-
 }
