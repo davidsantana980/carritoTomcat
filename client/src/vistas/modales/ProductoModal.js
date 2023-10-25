@@ -15,6 +15,15 @@ let DetallesProducto = (props) => {
         return nav("/compra-producto", {replace : true, state: datosCompra})
     } 
 
+    let handleBorrar = () => {
+        fetch(`http://localhost:8080/api/productos?id=${info.id}`,{
+            method: "DELETE",
+            credentials:"include",
+        })
+        .then(res => res.ok)
+        .then(res => window.location.reload())
+    } 
+    
     return (
         <Modal
           {...props}
@@ -36,6 +45,14 @@ let DetallesProducto = (props) => {
                                     </Col>
                                     <Col>
                                         <ButtonGroup className="flex-wrap float-end">
+                                            {
+                                                props.admin &&
+                                                <Card.Link>
+                                                    <Button size="sm" variant="danger" onClick={handleBorrar}>
+                                                        Borrar
+                                                    </Button>
+                                                </Card.Link>
+                                            }
                                             <Card.Link>
                                                 <Button size="sm" onClick={handleCompra}>
                                                     Comprar
@@ -70,7 +87,7 @@ let DetallesProducto = (props) => {
 
 export default function Producto (props) {
     let info = {...props.props};
-    const [detailsModal, setDetailsModal] = useState({show: false, props : {}});
+    const [detailsModal, setDetailsModal] = useState({show: false});
 
     if(!info){
         return (
@@ -81,12 +98,13 @@ export default function Producto (props) {
     }
 
     return (
-        <span className="stretched-link btn shadow-none"  style={{"textDecoration" : "none"}} onClick={() => setDetailsModal({show: true, props: info})}>
+        <span className="stretched-link btn shadow-none"  style={{"textDecoration" : "none"}} onClick={() => setDetailsModal({show: true})}>
             <span>{info.nombre}</span>
             <DetallesProducto 
                 show={detailsModal.show}
                 onHide={() => setDetailsModal({show :false})}
-                props={detailsModal.props}
+                props={info}
+                admin={props.admin}
             />
         </span>        
     )

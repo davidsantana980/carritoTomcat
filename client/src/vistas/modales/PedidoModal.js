@@ -13,6 +13,7 @@ let DetallesPedido = (props) => {
         try{
             fetch("http://localhost:8080/api/pedidos?pedido_id=" + pedido_id, {
                 method: "DELETE",
+                credentials:"include",
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -36,6 +37,7 @@ let DetallesPedido = (props) => {
         try{
             fetch("http://localhost:8080/api/pedidos?" + new URLSearchParams(pago), {
                 method: "PUT",
+                credentials:"include",
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -169,8 +171,7 @@ export default function Pedido (props) {
                     (
                         info.productos_comprados.length && 
                         <span>{`${info.productos_comprados[0].nombre_producto}/$${info.precio_total_pedido}`}</span>
-                    ) ||
-                    (
+                    ) ||                   (
                         <span>Pulsa para ver los detalles</span>
                     )
                 }

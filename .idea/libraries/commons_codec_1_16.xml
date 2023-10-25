@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="commons-codec-1.16">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Downloads/commons-codec-1.16.0" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="file://$USER_HOME$/Downloads/commons-codec-1.16.0/apidocs" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="file://$USER_HOME$/Downloads/commons-codec-1.16.0" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/Downloads/commons-codec-1.16.0" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Downloads/commons-codec-1.16.0" recursive="false" type="SOURCES" />
+  </library>
+</component>

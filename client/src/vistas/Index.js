@@ -7,8 +7,9 @@ import { useNavigate } from "react-router-dom";
 
 class IndexClass extends Component {
     
-    constructor(props) {
+    constructor(props = {admin : false}) {
         super(props);
+        this.props = props;
         this.state = {
             allProductos : [],
             dataIsLoaded : false
@@ -73,6 +74,21 @@ class IndexClass extends Component {
     
         return nav("/compra-producto", {replace : true, state: datosCompra})
     }
+
+    handlePost(){
+        let datosUsuario = {
+            email: "mortadela@gmail.com",
+            password: "mortadela"
+        }   
+
+       fetch('http://localhost:8080/api/login', {
+        method: "POST",
+        credentials:"include",
+        body: new URLSearchParams(datosUsuario)
+       })
+       .then(x => window.location.reload())
+       .catch(x => console.log(x))
+    }
     
     render() {
 
@@ -113,7 +129,7 @@ class IndexClass extends Component {
                                 <Card.Img className="mt-3" hidden={!producto.direccion_imagen} src={producto.direccion_imagen} style={{"aspectRatio": "1 / 1"}}/>                   
                                 <Card.Body className="d-flex flex-column">
                                     <Card.Title>
-                                        <Producto props={producto}/>  
+                                        <Producto props={producto} admin = {this.props.admin}/>  
                                     </Card.Title>
                                     <Card.Text className="text-center">
                                         Precio: {`${producto.precio}$`}
@@ -163,6 +179,7 @@ class IndexClass extends Component {
                 </Container>
             )
         }else{
+            
             return(
                 <Container fluid className="mb-5">
                     <Row>
@@ -181,6 +198,9 @@ class IndexClass extends Component {
                                 <hr/>
                             </Container>
                             <CategoriaCards/>
+                            <Button onClick={this.handlePost}>
+                                Inicia  modo admin de una vez
+                            </Button>
                         </Col>
                     </Row>
                 </Container>
@@ -191,7 +211,7 @@ class IndexClass extends Component {
 
 // export default Index
 
-export default function Index(props) {
+export default function Index(props= {admin : false}) {
     const navigation = useNavigate();
 
     return <IndexClass {...props} navigation={navigation} />;

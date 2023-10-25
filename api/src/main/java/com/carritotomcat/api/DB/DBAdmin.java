@@ -1,6 +1,11 @@
 package com.carritotomcat.api.DB;
 
+import com.carritotomcat.api.modelos.Usuario;
+import com.carritotomcat.api.utilidades.BuscaUsuario;
+import com.google.gson.Gson;
+
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DBAdmin {
     public static DBConfig conexion = new DBConfig();

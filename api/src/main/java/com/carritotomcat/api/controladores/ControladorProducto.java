@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "ControladorProducto", value = {"/ControladorProducto", "/api/productos"})
+@WebServlet(name = "ControladorProducto", value = {"/api/productos"})
 public class ControladorProducto extends HttpServlet {
     private static DBConfig conexion = new DBConfig();
     private static Connection pool;
