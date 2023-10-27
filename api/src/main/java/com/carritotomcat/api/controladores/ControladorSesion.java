@@ -105,7 +105,6 @@ public class ControladorSesion extends HttpServlet {
             print.flush();
             DBAdmin.conexion.closeConnection();
         }
-
     }
 
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
