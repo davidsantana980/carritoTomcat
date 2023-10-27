@@ -66,7 +66,6 @@ public class ControladorPedido extends HttpServlet {
             print.print(gson.toJson(errorObj));
         }finally{
             print.flush();
-            conexion.closeConnection();
         }
     }
 
@@ -86,103 +85,108 @@ public class ControladorPedido extends HttpServlet {
         String productos_compradosParam = request.getParameter("productos_comprados");
 
 
-        try{
-            if(usuario_id == null || usuario_id.isBlank() || usuario_id.isEmpty()) throw new Exception("no parameter usuario_id");
+        synchronized (this) {
+            try {
+                if (usuario_id == null || usuario_id.isBlank() || usuario_id.isEmpty())
+                    throw new Exception("no parameter usuario_id");
 
 
-            //desencripta el array de DetallePedidos. su forma es [{id_producto : int, cantidad_producto : int}]
-            JsonArray jsonArray = JsonParser.parseString(productos_compradosParam).getAsJsonArray();
-            ArrayList<DetallePedido> detallesArr = new ArrayList<DetallePedido>();
-            for (JsonElement jsonElement : jsonArray) {
-                DetallePedido pojo = gson.fromJson(jsonElement, DetallePedido.class);
-                detallesArr.add(pojo);
+                //desencripta el array de DetallePedidos. su forma es [{id_producto : int, cantidad_producto : int}]
+                JsonArray jsonArray = JsonParser.parseString(productos_compradosParam).getAsJsonArray();
+                ArrayList<DetallePedido> detallesArr = new ArrayList<DetallePedido>();
+                for (JsonElement jsonElement : jsonArray) {
+                    DetallePedido pojo = gson.fromJson(jsonElement, DetallePedido.class);
+                    detallesArr.add(pojo);
+                }
+
+                if (detallesArr.isEmpty()) throw new Exception("no products bought");
+                for (DetallePedido detalle : detallesArr) {
+                    if (detalle.getCantidad_producto() == 0 || detalle.getId_producto() == 0)
+                        throw new Exception("ERROR: pedido invalido");
+                }
+
+
+                //crea un nuevo Pedido con los parametros verificados
+                Pedido pedido = new Pedido(Integer.parseInt(usuario_id), fecha_pedido, detallesArr);
+                String query_pedidos_string = "INSERT INTO public.pedidos(usuario_id, fecha_pedido) VALUES (?, ?) RETURNING id_pedido;";
+
+                PreparedStatement query_pedidos = pool.prepareStatement(query_pedidos_string, Statement.RETURN_GENERATED_KEYS);
+                query_pedidos.setInt(1, pedido.getUsuario_id());
+                query_pedidos.setDate(2, pedido.getFecha_pedido());
+                query_pedidos.execute();
+                ResultSet resultado = query_pedidos.getGeneratedKeys();
+
+                //añade al objeto el id del pedido
+                while (resultado.next()) pedido.setId_pedido(resultado.getInt("id_pedido"));
+
+                //itera sobre el array original de DetallePedidos, e introduce en detalles_pedido sus datos...
+                for (DetallePedido detallePedido : pedido.getProductos_comprados()) {
+                    String query_detalles_string = "INSERT INTO public.detalles_pedido(pedido_id, producto_id, cantidad_producto) VALUES (?, ?, ?) RETURNING id_detalle;";
+
+                    PreparedStatement query_detalles = pool.prepareStatement(query_detalles_string, Statement.RETURN_GENERATED_KEYS);
+                    //...aca se usa el id del pedido creado
+                    query_detalles.setInt(1, pedido.getId_pedido());
+                    query_detalles.setInt(2, detallePedido.getId_producto());
+                    query_detalles.setInt(3, detallePedido.getCantidad_producto());
+                    query_detalles.execute();
+
+                    ResultSet resultadoQueryDetalles = query_detalles.getGeneratedKeys();
+
+                    //guardo el id del detalle generado...
+                    String id_detalle = null;
+                    if (resultadoQueryDetalles.next()) id_detalle = resultadoQueryDetalles.getString("id_detalle");
+
+                    //actualizo el precio del detalle generado a cantidad_producto * precio_producto
+                    String precio_update_string =
+                            "UPDATE detalles_pedido AS dp\n" +
+                                    "\tSET precio_detalle = dp.cantidad_producto * pr.precio\n" +
+                                    "\tFROM productos AS pr\n" +
+                                    "WHERE dp.producto_id = pr.id\n" +
+                                    "AND dp.id_detalle = (?);";
+
+                    PreparedStatement precio_update = pool.prepareStatement(precio_update_string);
+                    //...aca se usa el id del detalle generado
+                    precio_update.setInt(1, Integer.parseInt(id_detalle));
+
+                    precio_update.execute();
+                }
+
+                //actualizo el viejo array de detalles con los precios nuevos y calculados...
+                String queryDetalles = "SELECT precio_detalle FROM public.detalles_pedido WHERE pedido_id=(?);";
+                PreparedStatement query = pool.prepareStatement(queryDetalles, Statement.RETURN_GENERATED_KEYS);
+                query.setInt(1, pedido.getId_pedido());
+                ResultSet detalles = query.executeQuery();
+
+                ArrayList nuevosDetallesArr = new ArrayList<DetallePedido>();
+                while (detalles.next()) {
+                    DetallePedido detalle = new DetallePedido();
+                    detalle.setPrecio_detalle(detalles.getDouble("precio_detalle"));
+                    nuevosDetallesArr.add(detalle);
+                }
+                pedido.setProductos_comprados(nuevosDetallesArr);
+
+                //saco el precio total del pedido con getPrecio_total_pedido, y actualizo pedidos.precio_total_pedido con ese precio
+                String preciototal_update_string = "UPDATE pedidos SET precio_total_pedido = (?) WHERE pedidos.id_pedido = (?);";
+
+                PreparedStatement preciototal_update = pool.prepareStatement(preciototal_update_string);
+                preciototal_update.setDouble(1, pedido.getPrecio_total_pedido());
+                preciototal_update.setInt(2, pedido.getId_pedido());
+
+                preciototal_update.execute();
+
+                response.setStatus(200);
+                response.sendRedirect("/ControladorPedido?pedido_id=" + pedido.getId_pedido());
+            } catch (Exception e) {
+                e.printStackTrace();
+                Map<String, String> errorObj = new HashMap<>();
+                errorObj.put("error", e.getMessage());
+
+                print.print(gson.toJson(errorObj));
+            } finally {
+                print.flush();
+                conexion.closeConnection();
+                this.notifyAll();
             }
-
-            if (detallesArr.isEmpty()) throw new Exception("no products bought");
-            for (DetallePedido detalle : detallesArr) {
-                if(detalle.getCantidad_producto() == 0 || detalle.getId_producto() == 0) throw new Exception("ERROR: pedido invalido");
-            }
-
-
-            //crea un nuevo Pedido con los parametros verificados
-            Pedido pedido = new Pedido(Integer.parseInt(usuario_id), fecha_pedido, detallesArr);
-            String query_pedidos_string = "INSERT INTO public.pedidos(usuario_id, fecha_pedido) VALUES (?, ?) RETURNING id_pedido;";
-
-            PreparedStatement query_pedidos = pool.prepareStatement(query_pedidos_string, Statement.RETURN_GENERATED_KEYS);
-            query_pedidos.setInt(1, pedido.getUsuario_id());
-            query_pedidos.setDate(2, pedido.getFecha_pedido());
-            query_pedidos.execute();
-            ResultSet resultado = query_pedidos.getGeneratedKeys();
-
-            //añade al objeto el id del pedido
-            while (resultado.next()) pedido.setId_pedido(resultado.getInt("id_pedido"));
-
-            //itera sobre el array original de DetallePedidos, e introduce en detalles_pedido sus datos...
-            for (DetallePedido detallePedido : pedido.getProductos_comprados()) {
-                String query_detalles_string = "INSERT INTO public.detalles_pedido(pedido_id, producto_id, cantidad_producto) VALUES (?, ?, ?) RETURNING id_detalle;";
-
-                PreparedStatement query_detalles = pool.prepareStatement(query_detalles_string, Statement.RETURN_GENERATED_KEYS);
-                //...aca se usa el id del pedido creado
-                query_detalles.setInt(1, pedido.getId_pedido());
-                query_detalles.setInt(2, detallePedido.getId_producto());
-                query_detalles.setInt(3, detallePedido.getCantidad_producto());
-                query_detalles.execute();
-
-                ResultSet resultadoQueryDetalles = query_detalles.getGeneratedKeys();
-
-                //guardo el id del detalle generado...
-                String id_detalle = null;
-                if (resultadoQueryDetalles.next()) id_detalle = resultadoQueryDetalles.getString("id_detalle");
-
-                //actualizo el precio del detalle generado a cantidad_producto * precio_producto
-                String precio_update_string =
-                        "UPDATE detalles_pedido AS dp\n" +
-                            "\tSET precio_detalle = dp.cantidad_producto * pr.precio\n" +
-                            "\tFROM productos AS pr\n" +
-                        "WHERE dp.producto_id = pr.id\n" +
-                        "AND dp.id_detalle = (?);";
-
-                PreparedStatement precio_update = pool.prepareStatement(precio_update_string);
-                //...aca se usa el id del detalle generado
-                precio_update.setInt(1, Integer.parseInt(id_detalle));
-
-                precio_update.execute();
-            }
-
-            //actualizo el viejo array de detalles con los precios nuevos y calculados...
-            String queryDetalles = "SELECT precio_detalle FROM public.detalles_pedido WHERE pedido_id=(?);";
-            PreparedStatement query = pool.prepareStatement(queryDetalles, Statement.RETURN_GENERATED_KEYS);
-            query.setInt(1, pedido.getId_pedido());
-            ResultSet detalles = query.executeQuery();
-
-            ArrayList nuevosDetallesArr = new ArrayList<DetallePedido>();
-            while(detalles.next()) {
-                DetallePedido detalle = new DetallePedido();
-                detalle.setPrecio_detalle(detalles.getDouble("precio_detalle"));
-                nuevosDetallesArr.add(detalle);
-            }
-            pedido.setProductos_comprados(nuevosDetallesArr);
-
-            //saco el precio total del pedido con getPrecio_total_pedido, y actualizo pedidos.precio_total_pedido con ese precio
-            String preciototal_update_string = "UPDATE pedidos SET precio_total_pedido = (?) WHERE pedidos.id_pedido = (?);";
-
-            PreparedStatement preciototal_update = pool.prepareStatement(preciototal_update_string);
-            preciototal_update.setDouble(1, pedido.getPrecio_total_pedido());
-            preciototal_update.setInt(2, pedido.getId_pedido());
-
-            preciototal_update.execute();
-
-            response.setStatus(200);
-            response.sendRedirect("/ControladorPedido?pedido_id=" +pedido.getId_pedido());
-        }catch (Exception e) {
-            e.printStackTrace();
-            Map<String, String> errorObj = new HashMap<>();
-            errorObj.put("error", e.getMessage());
-
-            print.print(gson.toJson(errorObj));
-        }finally{
-            print.flush();
-            conexion.closeConnection();
         }
     }
 
@@ -194,38 +198,43 @@ public class ControladorPedido extends HttpServlet {
 
         PrintWriter print = response.getWriter();
 
-        try {
-            String pedido_id = request.getParameter("pedido_id");
-            String pedido_pagado = request.getParameter("pedido_pagado");
-            if (pedido_id == null || pedido_id.isEmpty() || pedido_id.isBlank()) throw new Exception("no pedido_id");
-            if (pedido_pagado == null || pedido_pagado.isEmpty() || pedido_pagado.isBlank() || !Boolean.parseBoolean(pedido_pagado)) throw new Exception("no se pudo realizar el pago");
+        synchronized (this) {
+            try {
+                String pedido_id = request.getParameter("pedido_id");
+                String pedido_pagado = request.getParameter("pedido_pagado");
+                if (pedido_id == null || pedido_id.isEmpty() || pedido_id.isBlank())
+                    throw new Exception("no pedido_id");
+                if (pedido_pagado == null || pedido_pagado.isEmpty() || pedido_pagado.isBlank() || !Boolean.parseBoolean(pedido_pagado))
+                    throw new Exception("no se pudo realizar el pago");
 
-            String orden = "UPDATE public.pedidos SET pedido_pagado=COALESCE((?), pedido_pagado) WHERE id_pedido = (?) RETURNING id_pedido;";
-            PreparedStatement query = pool.prepareStatement(orden, Statement.RETURN_GENERATED_KEYS);
-            query.setBoolean(1, Boolean.parseBoolean(pedido_pagado));
-            query.setInt(2, Integer.parseInt(pedido_id));
+                String orden = "UPDATE public.pedidos SET pedido_pagado=COALESCE((?), pedido_pagado) WHERE id_pedido = (?) RETURNING id_pedido;";
+                PreparedStatement query = pool.prepareStatement(orden, Statement.RETURN_GENERATED_KEYS);
+                query.setBoolean(1, Boolean.parseBoolean(pedido_pagado));
+                query.setInt(2, Integer.parseInt(pedido_id));
 
-            query.execute();
-            ResultSet resultado = query.getGeneratedKeys();
+                query.execute();
+                ResultSet resultado = query.getGeneratedKeys();
 
-            if (resultado.next()) {
-                HashMap<String, String> mensaje = new HashMap<>();
-                mensaje.put("mensaje", "pedido " + String.valueOf(resultado.getInt("id_pedido")) + " pagado correctamente");
+                if (resultado.next()) {
+                    HashMap<String, String> mensaje = new HashMap<>();
+                    mensaje.put("mensaje", "pedido " + String.valueOf(resultado.getInt("id_pedido")) + " pagado correctamente");
 
-                response.setStatus(200);
-                print.print(gson.toJson(mensaje));
-            }else{
-                throw new Exception("no results");
+                    response.setStatus(200);
+                    print.print(gson.toJson(mensaje));
+                } else {
+                    throw new Exception("no results");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Map<String, String> errorObj = new HashMap<>();
+                errorObj.put("error", e.getMessage());
+
+                print.print(gson.toJson(errorObj));
+            } finally {
+                print.flush();
+                conexion.closeConnection();
+                this.notifyAll();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Map<String, String> errorObj = new HashMap<>();
-            errorObj.put("error", e.getMessage());
-
-            print.print(gson.toJson(errorObj));
-        }finally {
-            print.flush();
-            conexion.closeConnection();
         }
     }
 
@@ -238,40 +247,43 @@ public class ControladorPedido extends HttpServlet {
 
         String pedido_id = request.getParameter("pedido_id");
 
-        try {
-            if (pedido_id == null || pedido_id.isEmpty() || pedido_id.isBlank()) throw new Exception("no parameter");
-            String queryDetalles = "DELETE FROM public.detalles_pedido WHERE pedido_id=(?);";
+        synchronized (this) {
+            try {
+                if (pedido_id == null || pedido_id.isEmpty() || pedido_id.isBlank())
+                    throw new Exception("no parameter");
+                String queryDetalles = "DELETE FROM public.detalles_pedido WHERE pedido_id=(?);";
 
-            PreparedStatement queryDetallesEliminados = pool.prepareStatement(queryDetalles);
-            queryDetallesEliminados.setInt(1, Integer.parseInt(pedido_id));
-            queryDetallesEliminados.execute();
+                PreparedStatement queryDetallesEliminados = pool.prepareStatement(queryDetalles);
+                queryDetallesEliminados.setInt(1, Integer.parseInt(pedido_id));
+                queryDetallesEliminados.execute();
 
-            String insertaQ = "DELETE FROM public.pedidos WHERE id_pedido = (?)";
+                String insertaQ = "DELETE FROM public.pedidos WHERE id_pedido = (?)";
 
-            PreparedStatement query = pool.prepareStatement(insertaQ);
-            query.setInt(1, Integer.parseInt(pedido_id));
-            query.execute();
+                PreparedStatement query = pool.prepareStatement(insertaQ);
+                query.setInt(1, Integer.parseInt(pedido_id));
+                query.execute();
 
-            response.setStatus(200);
+                response.setStatus(200);
 
-            Map<String, String> resObj = new HashMap<>();
-            resObj.put("exito", "pedido eliminado");
+                Map<String, String> resObj = new HashMap<>();
+                resObj.put("exito", "pedido eliminado");
 
-            print.print(gson.toJson(resObj));
-        } catch (Exception e) {
+                print.print(gson.toJson(resObj));
+            } catch (Exception e) {
 //                e.printStackTrace();
-            Map<String, String> errorObj = new HashMap<>();
-            errorObj.put("error", e.getMessage());
+                Map<String, String> errorObj = new HashMap<>();
+                errorObj.put("error", e.getMessage());
 
-            print.print(gson.toJson(errorObj));
-        }finally{
-            print.flush();
-            conexion.closeConnection();
+                print.print(gson.toJson(errorObj));
+            } finally {
+                print.flush();
+                conexion.closeConnection();
+                this.notifyAll();
+            }
         }
-
     }
 
-    private static ArrayList<Pedido> PedidosOrdenados(ResultSet resultado) throws SQLException {
+    private synchronized static ArrayList<Pedido> PedidosOrdenados(ResultSet resultado) throws SQLException {
         ArrayList<Pedido> resultObjArr = new ArrayList<>();
         if(resultado.next()) {
             do {

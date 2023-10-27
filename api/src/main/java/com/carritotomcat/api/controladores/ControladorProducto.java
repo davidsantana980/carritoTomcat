@@ -77,7 +77,6 @@ public class ControladorProducto extends HttpServlet {
             print.print(gson.toJson(errorObj));
         }finally{
             print.flush();
-            conexion.closeConnection();
         }
     }
 
@@ -96,41 +95,43 @@ public class ControladorProducto extends HttpServlet {
             String precio = request.getParameter("precio");
             String categoria = request.getParameter("categoria");
 
-            try {
-                String[] props = {nombre,descripcion, precio, categoria};
-                for (String prop : props) {
-                    if(prop == null || prop.isBlank() || prop.isEmpty()) throw new Exception("parametro faltante");
-                }
+            synchronized (this) {
+                try {
+                    String[] props = {nombre, descripcion, precio, categoria};
+                    for (String prop : props) {
+                        if (prop == null || prop.isBlank() || prop.isEmpty()) throw new Exception("parametro faltante");
+                    }
 
-                Producto prod = new Producto(nombre, descripcion, precio, categoria);
-                String orden = "INSERT INTO public.productos(\n" +
-                        "\tnombre, descripcion, precio, categoria_id)\n" +
-                        "\tVALUES (?, ?, ?, ?) RETURNING id, nombre, descripcion, precio, categoria_id, disponible;";
+                    Producto prod = new Producto(nombre, descripcion, precio, categoria);
+                    String orden = "INSERT INTO public.productos(\n" +
+                            "\tnombre, descripcion, precio, categoria_id)\n" +
+                            "\tVALUES (?, ?, ?, ?) RETURNING id, nombre, descripcion, precio, categoria_id, disponible;";
 
-                PreparedStatement query = pool.prepareStatement(orden, Statement.RETURN_GENERATED_KEYS);
-                query.setString(1, prod.getNombre());
-                query.setString(2, prod.getDescripcion());
-                query.setDouble(3, prod.getPrecio());
-                query.setInt(4, prod.getCategoria_id());
+                    PreparedStatement query = pool.prepareStatement(orden, Statement.RETURN_GENERATED_KEYS);
+                    query.setString(1, prod.getNombre());
+                    query.setString(2, prod.getDescripcion());
+                    query.setDouble(3, prod.getPrecio());
+                    query.setInt(4, prod.getCategoria_id());
 
-                query.execute();
-                ResultSet resultado = query.getGeneratedKeys();
+                    query.execute();
+                    ResultSet resultado = query.getGeneratedKeys();
 
-                ArrayList<Producto> resultObj = variosProductos(resultado);
-                response.setStatus(200);
-                print.print(gson.toJson(resultObj.get(0)));
+                    ArrayList<Producto> resultObj = variosProductos(resultado);
+                    response.setStatus(200);
+                    print.print(gson.toJson(resultObj.get(0)));
 
-            } catch (Exception e) {
+                } catch (Exception e) {
 //                e.printStackTrace();
-                Map<String, String> errorObj = new HashMap<>();
-                errorObj.put("error", e.getMessage());
+                    Map<String, String> errorObj = new HashMap<>();
+                    errorObj.put("error", e.getMessage());
 
-                print.print(gson.toJson(errorObj));
-            }finally{
-                print.flush();
-                conexion.closeConnection();
+                    print.print(gson.toJson(errorObj));
+                } finally {
+                    print.flush();
+                    conexion.closeConnection();
+                    this.notifyAll();
+                }
             }
-
     }
 
     @Override
@@ -141,52 +142,54 @@ public class ControladorProducto extends HttpServlet {
 
         PrintWriter print = response.getWriter();
 
-        try {
-            String id = request.getParameter("id");
-            if (id == null || id.isEmpty() || id.isBlank()) throw new Exception("no id");
+        synchronized (this) {
+            try {
+                String id = request.getParameter("id");
+                if (id == null || id.isEmpty() || id.isBlank()) throw new Exception("no id");
 
-            String orden = "UPDATE public.productos SET nombre=COALESCE((?), nombre), descripcion=COALESCE((?), descripcion), precio=COALESCE((?), precio), categoria_id=COALESCE((?), categoria_id) WHERE id = (?) RETURNING id, nombre, descripcion, precio, categoria_id;";
-            PreparedStatement query = pool.prepareStatement(orden, Statement.RETURN_GENERATED_KEYS);
-            query.setInt(5, Integer.parseInt(id));
+                String orden = "UPDATE public.productos SET nombre=COALESCE((?), nombre), descripcion=COALESCE((?), descripcion), precio=COALESCE((?), precio), categoria_id=COALESCE((?), categoria_id) WHERE id = (?) RETURNING id, nombre, descripcion, precio, categoria_id;";
+                PreparedStatement query = pool.prepareStatement(orden, Statement.RETURN_GENERATED_KEYS);
+                query.setInt(5, Integer.parseInt(id));
 
-            String nombre = request.getParameter("nombre");
-            String descripcion = request.getParameter("descripcion");
-            String precio = request.getParameter("precio");
-            String categoria = request.getParameter("categoria");
+                String nombre = request.getParameter("nombre");
+                String descripcion = request.getParameter("descripcion");
+                String precio = request.getParameter("precio");
+                String categoria = request.getParameter("categoria");
 
-            query.setString(1, nombre);
-            query.setString(2, descripcion);
+                query.setString(1, nombre);
+                query.setString(2, descripcion);
 
-            if (precio == null || precio.isEmpty() || precio.isBlank()) {
-                query.setNull(3, java.sql.Types.NULL);
-            }else{
-                query.setDouble(3, Double.parseDouble(precio));
+                if (precio == null || precio.isEmpty() || precio.isBlank()) {
+                    query.setNull(3, java.sql.Types.NULL);
+                } else {
+                    query.setDouble(3, Double.parseDouble(precio));
+                }
+
+                if (categoria == null || categoria.isEmpty() || categoria.isBlank()) {
+                    query.setNull(4, java.sql.Types.NULL);
+                } else {
+                    query.setInt(4, Integer.parseInt(categoria));
+                }
+
+                query.execute();
+                ResultSet resultado = query.getGeneratedKeys();
+
+                ArrayList<Producto> resultObj = variosProductos(resultado);
+
+                response.setStatus(200);
+                print.print(gson.toJson(resultObj.get(0)));
+            } catch (Exception e) {
+                e.printStackTrace();
+                Map<String, String> errorObj = new HashMap<>();
+                errorObj.put("error", e.getMessage());
+
+                print.print(gson.toJson(errorObj));
+            } finally {
+                print.flush();
+                conexion.closeConnection();
+                this.notifyAll();
             }
-
-            if (categoria == null || categoria.isEmpty() || categoria.isBlank()) {
-                query.setNull(4, java.sql.Types.NULL);
-            }else{
-                query.setInt(4, Integer.parseInt(categoria));
-            }
-
-            query.execute();
-            ResultSet resultado = query.getGeneratedKeys();
-
-            ArrayList<Producto> resultObj = variosProductos(resultado);
-
-            response.setStatus(200);
-            print.print(gson.toJson(resultObj.get(0)));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Map<String, String> errorObj = new HashMap<>();
-            errorObj.put("error", e.getMessage());
-
-            print.print(gson.toJson(errorObj));
-        }finally {
-            print.flush();
-            conexion.closeConnection();
         }
-
     }
 
     @Override
@@ -198,33 +201,35 @@ public class ControladorProducto extends HttpServlet {
 
         String id = request.getParameter("id");
 
-        try {
-            if (id == null || id.isEmpty() || id.isBlank()) throw new Exception("no parameter");
-            String insertaQ = "DELETE FROM public.productos WHERE productos.id = (?)";
+        synchronized (this) {
+            try {
+                if (id == null || id.isEmpty() || id.isBlank()) throw new Exception("no parameter");
+                String insertaQ = "DELETE FROM public.productos WHERE productos.id = (?)";
 
-            PreparedStatement query = pool.prepareStatement(insertaQ, Statement.RETURN_GENERATED_KEYS);
-            query.setInt(1, Integer.parseInt(id));
-            query.execute();
+                PreparedStatement query = pool.prepareStatement(insertaQ, Statement.RETURN_GENERATED_KEYS);
+                query.setInt(1, Integer.parseInt(id));
+                query.execute();
 
-            Map<String, String> message = new HashMap<>();
-            message.put("mensaje", "producto id " + id + " eliminado correctamente");
+                Map<String, String> message = new HashMap<>();
+                message.put("mensaje", "producto id " + id + " eliminado correctamente");
 
-            response.setStatus(200);
-            print.print(gson.toJson(message));
-        } catch (Exception e) {
+                response.setStatus(200);
+                print.print(gson.toJson(message));
+            } catch (Exception e) {
 //                e.printStackTrace();
-            Map<String, String> errorObj = new HashMap<>();
-            errorObj.put("error", e.getMessage());
+                Map<String, String> errorObj = new HashMap<>();
+                errorObj.put("error", e.getMessage());
 
-            print.print(gson.toJson(errorObj));
-        }finally{
-            print.flush();
-            conexion.closeConnection();
+                print.print(gson.toJson(errorObj));
+            } finally {
+                print.flush();
+                conexion.closeConnection();
+                this.notifyAll();
+            }
         }
-
     }
 
-    private static ArrayList<Producto> variosProductos(ResultSet resultado) throws SQLException {
+    private synchronized static ArrayList<Producto> variosProductos(ResultSet resultado) throws SQLException {
         ArrayList<Producto> resultObjArr = new ArrayList<>();
         if(resultado.next()) {
             do {
