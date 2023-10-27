@@ -1,13 +1,45 @@
 import { useState } from "react";
-import {  Button, Card, Col, Container, Form, ListGroup, Row } from "react-bootstrap"
+import {  Button, Card, Col, Container, Form, ListGroup, Modal, Row } from "react-bootstrap"
+import { LinkContainer } from "react-router-bootstrap";
 import { Navigate, useLocation } from "react-router-dom";
 // import bootstrap from "bootstrap"; 
+
+function EstatusModal(props = {mostrar : false, exitoso : false}) {
+    const [show, setShow] = useState(props.mostrar);
+  
+    const handleClose = () => setShow(false);
+  
+    return (
+      <>  
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>{props.exitoso ? "Pedido realizado correctamente!" : "Ups!"}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{props.exitoso ? "Puedes mirar los detalles en el apartado de pedidos." : "Tu pedido no se pudo efectuar correctamente, intenta más tarde"}</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Cerrar
+            </Button>
+           {
+                props.exitoso &&
+                    <LinkContainer to="/pedidos" replace>
+                        <Button variant="primary">
+                            Ir a pedidos
+                        </Button>
+                    </LinkContainer>
+            }
+          </Modal.Footer>
+        </Modal>
+      </>
+    );
+  }
+  
 
 export default function ComprarProductoLogueado (props = {usuario_id : 0}) {
     let {state : datosCompra} = useLocation();
 
     let [cantidad, setCantidad] = useState(1)
-    let [pedidoRealizado, setPedidoRealizado] = useState(false)
+    let [estatusPedido, setEstatusPedido] = useState({realizado : false , exitoso : false})
 
     if(!datosCompra || !Object.keys(datosCompra).length){
         return <Navigate to={"/"} />
@@ -26,37 +58,30 @@ export default function ComprarProductoLogueado (props = {usuario_id : 0}) {
             ])
         }
 
-        try{
-            // console.log(JSON.stringify(pedido))
-            fetch("http://localhost:8080/api/pedidos", {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: new URLSearchParams(pedido)
-            })
-            .then(async res => {
-                let json = await res.json()
+        fetch("http://localhost:8080/api/pedidos", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams(pedido)
+        })
+        .then(async res => {
+            let json = res.ok && await res.json()
 
-                return {
-                    ok: res.ok,
-                    ...json
-                }
-            })
-            .then(result => {
-                console.log(result)
-
-                if(result.ok){
-                    setPedidoRealizado(true);
-                }
-            })
-            .catch(err => {
-                console.log(err);
-            })
-        }catch(e){
-            console.log(e)
-        }
+            return {
+                ok: res.ok,
+                ...json
+            }
+        })
+        .then(result => {
+            if(!result.ok) throw new Error("Network response was not OK");
+            setEstatusPedido({exitoso: result.ok, realizado:true});
+        })
+        .catch(err => {
+            setEstatusPedido({exitoso: false, realizado:true});
+            console.log(err)
+        })        
     }
 
     let handleClick = (event) => {
@@ -75,7 +100,7 @@ export default function ComprarProductoLogueado (props = {usuario_id : 0}) {
                         <p className="display-6">Confirma tu compra:</p> 
                     <hr/>   
                     <Col>
-                        <Button href="/" variant="danger" className="w-100 mb-3" disabled={pedidoRealizado} data-mdb-toggle="tooltip" title="Cancelar">           
+                        <Button href="/" variant="danger" className="w-100 mb-3" disabled={estatusPedido.realizado} data-mdb-toggle="tooltip" title="Cancelar">           
                             Cancelar compra
                         </Button>
                         {/* COMPRA */}
@@ -95,7 +120,7 @@ export default function ComprarProductoLogueado (props = {usuario_id : 0}) {
 
                                     <Col lg="4" md="6" className="mb-4 mb-lg-0">
                                         <Form className="d-flex mb-4" style={{"maxWidth": "300px"}}>
-                                        <Button id="minus" className="px-3 me-2" disabled={pedidoRealizado} onClick={handleClick}>
+                                        <Button id="minus" className="px-3 me-2" disabled={estatusPedido.realizado} onClick={handleClick}>
                                                 <i className="fa fa-minus"></i>
                                             </Button>
 
@@ -104,7 +129,7 @@ export default function ComprarProductoLogueado (props = {usuario_id : 0}) {
                                                 <Form.Label htmlFor="cantidad">Cantidad</Form.Label>
                                             </Form.Floating>
 
-                                            <Button id="plus" className="px-3 ms-2" disabled={pedidoRealizado} onClick={handleClick}>
+                                            <Button id="plus" className="px-3 ms-2" disabled={estatusPedido.realizado} onClick={handleClick}>
                                                 <i className="fa fa-plus"></i>
                                             </Button>
                                         </Form>
@@ -150,7 +175,7 @@ export default function ComprarProductoLogueado (props = {usuario_id : 0}) {
                                 </ListGroup>
                             </Card.Body>
                             <Card.Footer className="py-2 text-center">
-                            <Button onClick={handleSubmit} disabled={pedidoRealizado} className="btn-success btn-lg w-100">
+                            <Button onClick={handleSubmit} disabled={estatusPedido.realizado} className="btn-success btn-lg w-100">
                                     Confirmar compra
                                 </Button>
                             </Card.Footer>
@@ -159,14 +184,13 @@ export default function ComprarProductoLogueado (props = {usuario_id : 0}) {
                     {/* FACTURA */}
                     <hr className="mt-3"/>
                     {/* MENSAJE DE EXITO */}
-                    <div className="bg-light w-100 mb-3" hidden={!pedidoRealizado}>
-                        <Container>
-                            <h1 className="display-4">Pedido realizado correctamente!</h1>
-                            <p className="lead" >
-                                Puedes mirar los detalles en el apartado de pedidos.
-                            </p>
-                        </Container>
-                    </div>
+                    {
+                        estatusPedido.realizado &&
+                        <EstatusModal
+                            mostrar={estatusPedido.realizado}
+                            exitoso={estatusPedido.exitoso}
+                        />
+                    }
                     {/* MENSAJE DE EXITO */}
                 </Row>
                 <hr/>

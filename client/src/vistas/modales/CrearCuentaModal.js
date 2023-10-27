@@ -27,13 +27,10 @@ export default function CrearCuentaModal (props={administrador : false}) {
           ...datosUsuario,
           [inputName]: inputValue
         });
-
-        console.log(datosUsuario)
     }
 
     let handleSubmit = () => {
 
-        // console.log(JSON.stringify(datosUsuario))
             try{        
                 fetch('http://localhost:8080/api/usuarios', {
                     method: "POST",
@@ -104,7 +101,12 @@ export default function CrearCuentaModal (props={administrador : false}) {
                         </Form.Label>
                     </Form.Floating>
 
-                    {props.administrador && <Form.Check name="tipo" value={datosUsuario.tipo} onClick={handleChange} type="switch" className="md-form mb-4" label="Tipo administrador"/>}
+                    {/* 
+                        + SEGURIDAD :
+                        {props.administrador && <Form.Check name="tipo" value={datosUsuario.tipo} onClick={handleChange} type="switch" className="md-form mb-4" label="Tipo administrador"/>}
+                    */}
+
+                    <Form.Check name="tipo" value={datosUsuario.tipo} onClick={handleChange} type="switch" className="md-form mb-4" label="Tipo administrador"/>
 
                     <Alert variant="danger" hidden={!estatus.error} >
                         Llena todos los campos marcados

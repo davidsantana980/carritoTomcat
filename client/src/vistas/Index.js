@@ -19,15 +19,26 @@ class IndexClass extends Component {
     async componentDidMount(){
         try{
             await fetch("http://localhost:8080/api/productos?buscaTodos=true") 
-            .then((res) => res.json()) 
+            .then(async (res) => {
+                if(res.ok){
+                    let productos = await res.json();
+                    return {ok : res.ok, productos : productos}
+                }else{ 
+                    return {ok : res.ok}
+                }
+            }) 
             .then((json) => { 
-                this.setState({
-                    allProductos: json, 
-                    dataIsLoaded:true 
-                })
+                if(json.ok){
+                    this.setState({
+                        allProductos: json.productos, 
+                        dataIsLoaded:true 
+                    })
+                }else{
+                    throw new Error("Network response was not OK");
+                }
             })
             .catch((error) => {
-                throw new Error("Network response was not OK");
+                throw new Error(error);
             })
         }catch(error){
             console.log(error)
@@ -75,20 +86,20 @@ class IndexClass extends Component {
         return nav("/compra-producto", {replace : true, state: datosCompra})
     }
 
-    handlePost(){
-        let datosUsuario = {
-            email: "mortadela@gmail.com",
-            password: "mortadela"
-        }   
+    // handlePost(){
+    //     let datosUsuario = {
+    //         email: "mortadela@gmail.com",
+    //         password: "mortadela"
+    //     }   
 
-       fetch('http://localhost:8080/api/login', {
-        method: "POST",
-        credentials:"include",
-        body: new URLSearchParams(datosUsuario)
-       })
-       .then(x => window.location.reload())
-       .catch(x => console.log(x))
-    }
+    //    fetch('http://localhost:8080/api/login', {
+    //     method: "POST",
+    //     credentials:"include",
+    //     body: new URLSearchParams(datosUsuario)
+    //    })
+    //    .then(x => window.location.reload())
+    //    .catch(x => console.log(x))
+    // }
     
     render() {
 
@@ -198,9 +209,9 @@ class IndexClass extends Component {
                                 <hr/>
                             </Container>
                             <CategoriaCards/>
-                            <Button onClick={this.handlePost}>
+                            {/* <Button onClick={this.handlePost}>
                                 Inicia  modo admin de una vez
-                            </Button>
+                            </Button> */}
                         </Col>
                     </Row>
                 </Container>

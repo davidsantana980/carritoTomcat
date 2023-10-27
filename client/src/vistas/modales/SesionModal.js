@@ -79,9 +79,6 @@ export default function SesionModal (props) {
                 <Alert variant="danger" hidden={!estatus.error} >
                     Usuario o contraseña incorrectos
                 </Alert>
-                {/* <Alert variant="success" hidden={!estatus.exito}>
-                    Pedido realizado correctamente! Puedes mirar los detalles en el apartado de pedidos.
-                </Alert>                                    */}
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-center">
                 <Button type="submit" onClick={handleSubmit}>Confirmar datos</Button>
