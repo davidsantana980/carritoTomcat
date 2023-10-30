@@ -105,7 +105,7 @@ export default function AgregaProductos() {
                     </Form.Select>
                     <Container fluid className="d-grid mt-1">
                         {/* <LinkContainer to="/see-issues" state={projectObj}>   */}
-                        <Button variant="primary" onClick={handleSubmit} className="mt-2" type="submit">Search</Button>
+                        <Button variant="primary" onClick={handleSubmit} className="mt-2" type="submit">Agregar producto</Button>
                         {/* </LinkContainer> */}
                     </Container> 
                 </Container>
