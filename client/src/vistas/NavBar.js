@@ -29,7 +29,7 @@ export default function NavBar(props = {verificado : false, administrador : fals
         <Nav.Link>Agregar producto</Nav.Link>
       </LinkContainer>
       <LinkContainer to="/pedidos">
-        <Nav.Link>Mis pedidos</Nav.Link>
+        <Nav.Link>{!props.administrador ? "Mis pedidos" : "Pedidos"}</Nav.Link>
       </LinkContainer>
       <Nav.Link onClick={handleCierre}>Cerrar sesion</Nav.Link>
     </>

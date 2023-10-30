@@ -34,7 +34,7 @@ class ListaPedidos extends Component{
                 }
                 return this.setState({
                     dataIsLoaded : false,
-                    message : "Parece que aún no has hecho ningún pedido"
+                    message : this.props.admin ? "No hay pedidos en la base de datos" : "Parece que aún no has hecho ningún pedido"
                 })
             })
             .catch((error) => {
@@ -56,6 +56,7 @@ class ListaPedidos extends Component{
                 return (
                         <Container fluid key={index} className="mb-2">
                             <Card key={index} className="text-center">
+                                {this.props.admin ? <Card.Header>Compra del usuario {pedido.usuario_id}</Card.Header> : ""}
                                 <Card.Body>
                                     <Row className="mb-3">
                                         <Col>

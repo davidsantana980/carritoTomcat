@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Card, Col, Container, ListGroup, Modal, Row} from 
 let DetallesPedido = (props) => {
     let info = {...props.props}
 
-    const [pedidoPagado, setPedidoPagado] = useState(info.pagado || false);
+    const pedidoPagado = false || info.pagado;
 
     let handleEliminar = () => {
         let pedido_id = info.id_pedido
@@ -44,9 +44,7 @@ let DetallesPedido = (props) => {
             })
             .then(res => res.json())
             .then(result => {
-                if(result.mensaje){
-                    setPedidoPagado(true)
-                }
+                window.location.reload()
             })
         }catch(e){
             console.log(e)
@@ -141,9 +139,13 @@ let DetallesPedido = (props) => {
                             {
                                 info.productos_comprados.length && 
                                 <ProductosComprados/>
+
+                                ||
+
+                                "El producto comprado en este pedido fue borrado."
                             }
                         </Card.Body>
-                        <Card.Footer>Precio total: {info.precio_total_pedido}</Card.Footer>
+                        <Card.Footer>{info.precio_total_pedido && `Precio total: ${info.precio_total_pedido}`}</Card.Footer>
                     </Card>
                 </Container>
             </Modal.Body>
