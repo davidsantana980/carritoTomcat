@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,24 +95,28 @@ public class ControladorProducto extends HttpServlet {
             String descripcion = request.getParameter("descripcion");
             String precio = request.getParameter("precio");
             String categoria = request.getParameter("categoria");
+            String cantidad = request.getParameter("cantidad");
 
             synchronized (this) {
                 try {
-                    String[] props = {nombre, descripcion, precio, categoria};
-                    for (String prop : props) {
-                        if (prop == null || prop.isBlank() || prop.isEmpty()) throw new Exception("parametro faltante");
-                    }
+                    String[] props = {nombre, descripcion, precio, categoria, cantidad};
+                    Arrays.stream(props).forEach(prop -> {
+                        if (prop == null || prop.isBlank() || prop.isEmpty()) throw new RuntimeException("parametro faltante");
+                    });
 
                     Producto prod = new Producto(nombre, descripcion, precio, categoria);
+                    prod.setCantidad(Integer.valueOf(cantidad));
+
                     String orden = "INSERT INTO public.productos(\n" +
-                            "\tnombre, descripcion, precio, categoria_id)\n" +
-                            "\tVALUES (?, ?, ?, ?) RETURNING id, nombre, descripcion, precio, categoria_id, disponible;";
+                            "\tnombre, descripcion, precio, categoria_id, cantidad)\n" +
+                            "\tVALUES (?, ?, ?, ?, ?) RETURNING id, nombre, descripcion, precio, categoria_id, disponible, cantidad;";
 
                     PreparedStatement query = pool.prepareStatement(orden, Statement.RETURN_GENERATED_KEYS);
                     query.setString(1, prod.getNombre());
                     query.setString(2, prod.getDescripcion());
                     query.setDouble(3, prod.getPrecio());
                     query.setInt(4, prod.getCategoria_id());
+                    query.setInt(5, prod.getCantidad());
 
                     query.execute();
                     ResultSet resultado = query.getGeneratedKeys();
@@ -147,7 +152,7 @@ public class ControladorProducto extends HttpServlet {
                 String id = request.getParameter("id");
                 if (id == null || id.isEmpty() || id.isBlank()) throw new Exception("no id");
 
-                String orden = "UPDATE public.productos SET nombre=COALESCE((?), nombre), descripcion=COALESCE((?), descripcion), precio=COALESCE((?), precio), categoria_id=COALESCE((?), categoria_id) WHERE id = (?) RETURNING id, nombre, descripcion, precio, categoria_id;";
+                String orden = "UPDATE public.productos SET nombre=COALESCE((?), nombre), descripcion=COALESCE((?), descripcion), precio=COALESCE((?), precio), categoria_id=COALESCE((?), categoria_id), cantidad=COALESCE((?), cantidad),  WHERE id = (?) RETURNING id, nombre, descripcion, precio, categoria_id, cantidad;";
                 PreparedStatement query = pool.prepareStatement(orden, Statement.RETURN_GENERATED_KEYS);
                 query.setInt(5, Integer.parseInt(id));
 
@@ -155,6 +160,7 @@ public class ControladorProducto extends HttpServlet {
                 String descripcion = request.getParameter("descripcion");
                 String precio = request.getParameter("precio");
                 String categoria = request.getParameter("categoria");
+                String cantidad = request.getParameter("cantidad");
 
                 query.setString(1, nombre);
                 query.setString(2, descripcion);
@@ -169,6 +175,12 @@ public class ControladorProducto extends HttpServlet {
                     query.setNull(4, java.sql.Types.NULL);
                 } else {
                     query.setInt(4, Integer.parseInt(categoria));
+                }
+
+                if (cantidad == null || cantidad.isEmpty() || cantidad.isBlank()) {
+                    query.setNull(5, java.sql.Types.NULL);
+                } else {
+                    query.setInt(5, Integer.parseInt(cantidad));
                 }
 
                 query.execute();
@@ -240,6 +252,7 @@ public class ControladorProducto extends HttpServlet {
                 resultObj.setPrecio(resultado.getDouble("precio"));
                 resultObj.setCategoria_id(resultado.getInt("categoria_id"));
                 resultObj.setDisponible(resultado.getBoolean("disponible"));
+                resultObj.setCantidad(resultado.getInt("cantidad"));
 
                 String insertaQ = "SELECT nombre FROM public.categorias WHERE id = (?)";
                 PreparedStatement query = pool.prepareStatement(insertaQ, Statement.RETURN_GENERATED_KEYS);

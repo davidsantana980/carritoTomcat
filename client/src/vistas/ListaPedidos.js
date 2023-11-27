@@ -11,7 +11,11 @@ class ListaPedidos extends Component{
         this.state = {
             listaDePedidos : [],
             dataIsLoaded : false,
-            message : ""
+            message : "",
+            pedido : {
+                show : false,
+                detallesPedido : {}
+            }
         };
     }
 
@@ -62,7 +66,18 @@ class ListaPedidos extends Component{
                                         <Col>
                                             <Container fluid>
                                                 <Card.Title as={Button}  className="btn-light">
-                                                    <Pedido props={pedido}/>
+                                                    <span className="stretched-link btn shadow-none"  style={{"textDecoration" : "none"}} onClick={() => {
+                                                        this.setState({pedido : {show: true, detallesPedido : pedido}})
+                                                    }}>
+                                                        {
+                                                            (
+                                                                pedido.productos_comprados.length && 
+                                                                 <span>{`${pedido.productos_comprados[0].nombre_producto}/$${pedido.precio_total_pedido}`}</span>
+                                                             ) || ( 
+                                                                <span>Pulsa para ver los detalles</span>
+                                                            )
+                                                        }
+                                                    </span>
                                                 </Card.Title>
                                                 <Card.Text>
                                                     <span><b>{pedido.fecha_pedido}</b></span>
@@ -88,6 +103,13 @@ class ListaPedidos extends Component{
                             <PedidoCards />
                         </CardGroup>
                     </Container>
+                    <Pedido 
+                        show = {this.state.pedido.show}
+                        detallesPedido = {this.state.pedido.detallesPedido}
+                        onHide = {() => {
+                            this.setState({pedido : {...this.state.pedido, show: false}})
+                        }}
+                    />
                 </>
             ) 
 

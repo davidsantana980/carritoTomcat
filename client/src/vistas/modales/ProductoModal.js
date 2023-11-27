@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button, ButtonGroup, Card, Col, Container, ListGroup, Modal, Row} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -85,11 +84,15 @@ let DetallesProducto = (props) => {
 } 
 
 
-export default function Producto (props) {
-    let info = {...props.props};
-    const [detailsModal, setDetailsModal] = useState({show: false});
+export default function Producto (props = {
+    show : false,
+    onHide : () => {},
+    detallesProducto : {},
+    admin : false
+}){
+    // const [detailsModal, setDetailsModal] = useState({show: false});
 
-    if(!info){
+    if(props.show && !Object.keys(props.detallesProducto).length){
         return (
             <Container>
                 <h1>Error inesperado, no se consiguió el producto</h1>
@@ -98,14 +101,11 @@ export default function Producto (props) {
     }
 
     return (
-        <span className="stretched-link btn shadow-none"  style={{"textDecoration" : "none"}} onClick={() => setDetailsModal({show: true})}>
-            <span>{info.nombre}</span>
-            <DetallesProducto 
-                show={detailsModal.show}
-                onHide={() => setDetailsModal({show :false})}
-                props={info}
-                admin={props.admin}
-            />
-        </span>        
+        <DetallesProducto 
+            show={props.show}
+            onHide={props.onHide}
+            props={props.detallesProducto}
+            admin={props.admin}
+        />
     )
 }

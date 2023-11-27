@@ -12,7 +12,11 @@ class ClaseListaProductos extends Component{
         this.state = {
             listaDeProductos : [],
             dataIsLoaded : false,
-            message : ""
+            message : "",
+            productoModal : {
+                show : false,
+                detallesProducto : {},
+            }
         };
 
         if(!this.props.params) return <Navigate to={"/"}/>;
@@ -69,7 +73,11 @@ class ClaseListaProductos extends Component{
                                         <Col>
                                             <Container fluid>
                                                 <Card.Title as={Button} className="btn-light">
-                                                    <Producto props={producto}/>
+                                                    <span className="stretched-link btn shadow-none"  style={{"textDecoration" : "none"}} onClick={() => {
+                                                        this.setState({productoModal : {show : true, detallesProducto : producto}})
+                                                    }}>
+                                                        <span>{producto.nombre}</span>
+                                                    </span>
                                                 </Card.Title>
                                                 <Card.Text>
                                                     {producto.descripcion ? (
@@ -97,6 +105,12 @@ class ClaseListaProductos extends Component{
                             {productoCards}
                         </CardGroup>
                     </Container>
+                    <Producto 
+                        admin={false} 
+                        detallesProducto={this.state.productoModal.detallesProducto}
+                        show = {this.state.productoModal.show} 
+                        onHide = {() => this.setState({productoModal : {...this.state.productoModal, show : false}})}
+                    />
                 </>
             ) 
 

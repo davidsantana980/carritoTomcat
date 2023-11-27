@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,9 +87,7 @@ public class ControladorSesion extends HttpServlet {
                     mensaje.put("usuario", (String) sesion.getAttribute("usuario"));
                 }
 
-                Cookie usuario_id = new Cookie("usuario_id", String.valueOf(usuario.getId()));
-                usuario_id.setPath("/");
-                response.addCookie(usuario_id);
+                addCookie(response, usuario);
 
                 print.print(gson.toJson(mensaje));
             }else{
@@ -107,6 +106,12 @@ public class ControladorSesion extends HttpServlet {
         }
     }
 
+    private static void addCookie(HttpServletResponse response, Usuario usuario) {
+        Cookie usuario_id = new Cookie("usuario_id", String.valueOf(usuario.getId()));
+        usuario_id.setPath("/");
+        response.addCookie(usuario_id);
+    }
+
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             HttpSession sesion = request.getSession(false);
@@ -115,9 +120,9 @@ public class ControladorSesion extends HttpServlet {
                 sesion.invalidate();
                 Cookie[] cookies = request.getCookies();
                 if(cookies!=null){
-                    for (int i = 0; i < cookies.length; i++) {
-                        cookies[i].setMaxAge(0);
-                    }
+                    Arrays.stream(cookies).forEach(cookie -> {
+                        cookie.setMaxAge(0);
+                    });
                 }
 
                 response.setStatus(200);

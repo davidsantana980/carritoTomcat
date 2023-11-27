@@ -12,7 +12,11 @@ class IndexClass extends Component {
         this.props = props;
         this.state = {
             allProductos : [],
-            dataIsLoaded : false
+            dataIsLoaded : false,
+            productoModal : {
+                show : false,
+                detallesProducto : {},
+            }
         };
     }
 
@@ -140,7 +144,11 @@ class IndexClass extends Component {
                                 <Card.Img className="mt-3" hidden={!producto.direccion_imagen} src={producto.direccion_imagen} style={{"aspectRatio": "1 / 1"}}/>                   
                                 <Card.Body className="d-flex flex-column">
                                     <Card.Title>
-                                        <Producto props={producto} admin = {this.props.admin}/>  
+                                        <span className="stretched-link btn shadow-none"  style={{"textDecoration" : "none"}} onClick={() => {
+                                            this.setState({productoModal : {show : true, detallesProducto : producto}})
+                                        }}>
+                                            <span>{producto.nombre}</span>
+                                        </span>
                                     </Card.Title>
                                     <Card.Text className="text-center">
                                         Precio: {`${producto.precio}$`}
@@ -212,6 +220,12 @@ class IndexClass extends Component {
                             {/* <Button onClick={this.handlePost}>
                                 Inicia  modo admin de una vez
                             </Button> */}
+                            <Producto 
+                                admin={this.props.admin} 
+                                detallesProducto={this.state.productoModal.detallesProducto}
+                                show = {this.state.productoModal.show} 
+                                onHide = {() => this.setState({productoModal : {...this.state.productoModal, show : false}})}
+                            />  
                         </Col>
                     </Row>
                 </Container>

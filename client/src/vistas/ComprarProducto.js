@@ -67,6 +67,15 @@ export default function ComprarProducto () {
                                         <p className="text-start text-md-center">
                                             Precio por unidad: <strong>${datosCompra.producto.precio}</strong>
                                         </p>
+
+                                        <p className="text-start text-md-center">
+                                            {
+                                                datosCompra.producto.disponible ? 
+                                                    `Este producto está disponible, ${!!datosCompra.producto.cantidad ? `hay ${datosCompra.producto.cantidad} unidades en el stock` : "pero está agotado actualmente."} ` 
+                                                :
+                                                    `Este producto no está disponible.`
+                                            }
+                                        </p>
                                     </Col>
                                 </Row>
                             </Card.Body>
