@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button, ButtonGroup, Card, Col, Container, ListGroup, Modal, Row} from "react-bootstrap";
-// import Cookies from 'js-cookie';
 
 let DetallesPedido = (props) => {
     let info = {...props.props}
@@ -94,7 +93,7 @@ let DetallesPedido = (props) => {
         }
     }
 
-
+    const cantidadDeProductos = !info || !Object.keys(info).length ? 0 : info.productos_comprados.length
     return (
         <Modal
           {...props}
@@ -137,13 +136,13 @@ let DetallesPedido = (props) => {
                             </Card.Subtitle>
                             <hr/>
                             {
-                                info.productos_comprados.length && 
+                                cantidadDeProductos && 
                                 <ProductosComprados/>
 
                                 ||
 
                                 "El producto comprado en este pedido fue borrado."
-                            }
+                            } 
                         </Card.Body>
                         <Card.Footer>{info.precio_total_pedido && `Precio total: ${info.precio_total_pedido}`}</Card.Footer>
                     </Card>
@@ -154,11 +153,13 @@ let DetallesPedido = (props) => {
 } 
 
 
-export default function Pedido (props) {
-    let info = {...props.props};
-    const [detailsModal, setDetailsModal] = useState({show: false, props : {}});
+export default function Pedido (props = {
+    show : false,
+    detallesPedido : {},
+    onHide : () => {}
+}) {
     
-    if(!info){
+    if(props.show && !Object.keys(props.detallesPedido).length){
         return (
             <Container>
                 <h1>Error inesperado, no se consiguió el pedido</h1>
@@ -167,27 +168,10 @@ export default function Pedido (props) {
     }
 
     return (
-        <>
-            <span className="stretched-link btn shadow-none"  style={{"textDecoration" : "none"}} onClick={() => setDetailsModal({show: true, props: info})}>
-                {
-                    (
-                        info.productos_comprados.length && 
-                        <span>{`${info.productos_comprados[0].nombre_producto}/$${info.precio_total_pedido}`}</span>
-                    ) ||                   (
-                        <span>Pulsa para ver los detalles</span>
-                    )
-                }
-                {   
-                    detailsModal.show && 
-                    <DetallesPedido 
-                        show={detailsModal.show}
-                        onHide={() => {
-                            setDetailsModal({show:false})
-                        }}
-                        props={detailsModal.props}
-                    />
-                }
-            </span>     
-        </>
+        <DetallesPedido 
+            show={props.show}
+            onHide={props.onHide}
+            props={props.detallesPedido}
+        />
     )
 }

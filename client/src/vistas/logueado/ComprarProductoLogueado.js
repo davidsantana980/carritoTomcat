@@ -4,7 +4,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Navigate, useLocation } from "react-router-dom";
 // import bootstrap from "bootstrap"; 
 
-function EstatusModal(props = {mostrar : false, exitoso : false}) {
+function EstatusModal(props = {mostrar : false, exitoso : false, mensaje : ""}) {
     const [show, setShow] = useState(props.mostrar);
   
     const handleClose = () => setShow(false);
@@ -15,7 +15,7 @@ function EstatusModal(props = {mostrar : false, exitoso : false}) {
           <Modal.Header closeButton>
             <Modal.Title>{props.exitoso ? "Pedido realizado correctamente!" : "Ups!"}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>{props.exitoso ? "Puedes mirar los detalles en el apartado de pedidos." : "Tu pedido no se pudo efectuar correctamente, intenta más tarde"}</Modal.Body>
+          <Modal.Body>{props.exitoso ? "Puedes mirar los detalles en el apartado de pedidos." : !props.mensaje ? "Tu pedido no se pudo efectuar correctamente, intenta más tarde" : props.mensaje}</Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Cerrar
@@ -39,7 +39,7 @@ export default function ComprarProductoLogueado (props = {usuario_id : 0}) {
     let {state : datosCompra} = useLocation();
 
     let [cantidad, setCantidad] = useState(1)
-    let [estatusPedido, setEstatusPedido] = useState({realizado : false , exitoso : false})
+    let [estatusPedido, setEstatusPedido] = useState({realizado : false , exitoso : false, mensaje : ""})
 
     if(!datosCompra || !Object.keys(datosCompra).length){
         return <Navigate to={"/"} />
@@ -57,6 +57,8 @@ export default function ComprarProductoLogueado (props = {usuario_id : 0}) {
                 }
             ])
         }
+
+        if(cantidad > datosCompra.producto.cantidad) return setEstatusPedido({realizado : true, exitoso : false, mensaje : "No se pudo efectuar el pedido: No hay suficientes unidades en el stock"})
 
         fetch("http://localhost:8080/api/pedidos", {
             method: "POST",
@@ -137,6 +139,15 @@ export default function ComprarProductoLogueado (props = {usuario_id : 0}) {
                                         <p className="text-start text-md-center">
                                             Precio por unidad: <strong>${datosCompra.producto.precio}</strong>
                                         </p>
+                                        
+                                        <p className="text-start text-md-center">
+                                            {
+                                                datosCompra.producto.disponible ? 
+                                                    `Este producto está disponible, ${!!datosCompra.producto.cantidad ? `hay ${datosCompra.producto.cantidad} unidades en el stock` : "pero está agotado actualmente."} ` 
+                                                :
+                                                    `Este producto no está disponible.`
+                                            }
+                                        </p>
                                     </Col>
                                 </Row>
                             </Card.Body>
@@ -189,6 +200,7 @@ export default function ComprarProductoLogueado (props = {usuario_id : 0}) {
                         <EstatusModal
                             mostrar={estatusPedido.realizado}
                             exitoso={estatusPedido.exitoso}
+                            mensaje={estatusPedido.mensaje}
                         />
                     }
                     {/* MENSAJE DE EXITO */}

@@ -3,9 +3,18 @@ package com.carritotomcat.api.modelos;
 import java.io.Serializable;
 
 public class Producto implements Serializable {
-    private int id;
+    private Integer id;
     private String nombre;
     private String descripcion;
+    private Integer cantidad;
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
 
     public String getDireccion_imagen() {
         return direccion_imagen;
@@ -35,11 +44,11 @@ public class Producto implements Serializable {
     public Producto() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
