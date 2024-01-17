@@ -13,8 +13,8 @@ public class DBConfig {
     public DBConfig() {
         driver = "org.postgresql.Driver";
         url = "jdbc:postgresql://localhost:5432/javaCommerce";
-        user = "postgres";
-        pass = "123456789";
+        user = "USERNAME";
+        pass = "PASSWORD";
         conn = null;
     }
 
